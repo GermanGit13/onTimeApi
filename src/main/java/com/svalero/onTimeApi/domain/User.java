@@ -6,9 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -24,18 +22,15 @@ public class User {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
 
-    @Column(unique = true)
-    @NotBlank(message = LITERAL_NOT_BLANK)
-    @NotNull(message = LITERAL_NOT_NULL)
-    @Size(min = 3, max = 9)
+//    @Column(unique = true)
+    @NotNull(message = "El campo es obligatorio")
     private String username;
 
-    @NotBlank(message = LITERAL_NOT_BLANK)
     @NotNull(message = LITERAL_NOT_NULL)
     @Size(min = 6, max = 16)
     private String pass;
 
-    @Column(columnDefinition = ROL_DEFAULT)
+//    @Column(columnDefinition = ROL_DEFAULT)
     @NotNull(message = LITERAL_NOT_NULL)
     private String rol;
 
