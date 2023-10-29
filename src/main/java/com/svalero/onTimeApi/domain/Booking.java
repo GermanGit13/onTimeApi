@@ -47,4 +47,13 @@ public class Booking {
     @JoinColumn(name = "user_id")
     private User userInBooking;
 
+    /**
+     * Siempre en las N:1 (ManyToOne se define la clave ajena en el lado N (Many)
+     * Para relacionar una reserva con un sitio
+     * @ManyToOne: Muchas reservas asociados a un sitio N:1
+     * @JoinColumn(name = "desk_id") como queremos que se llame la tabla de la relación N:1
+     */
+    @ManyToOne
+    @JoinColumn(name = "desk_id")
+    private Desk deskInBooking;
 }
