@@ -70,4 +70,13 @@ public class User {
     @OneToMany(mappedBy = "userInSign")
     @JsonBackReference(value = "user_signs")
     private List<Sign> signs;
+
+    /**
+     * Para relacionar los usuarios con las  reservas: Un usuario puede tener x reservas
+     * @OneToMany(mappedBy = "user"): Indicamos que ya está mapeado en la Clase Sign que es donde se genera la columna con id de los usuarios
+     * @JsonBackReference(value = "user_bookings"): Es para cortar la recursión infinita, por el lado del usuario para que no se siga mostrando el objeto sign completo. Evitar bucle infinito
+     */
+    @OneToMany(mappedBy = "userInBooking")
+    @JsonBackReference(value = "user_bookings")
+    private List<Booking> bookings;
 }
