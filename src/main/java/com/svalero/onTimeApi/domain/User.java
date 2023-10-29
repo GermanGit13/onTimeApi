@@ -14,7 +14,7 @@ import static com.svalero.onTimeApi.Util.Literal.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "users")
+@Entity(name = USER)
 public class User {
 
     @Id
