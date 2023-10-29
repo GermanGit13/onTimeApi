@@ -48,4 +48,13 @@ public class Sign {
     @Column
     private String incidendeOut;
 
+    /**
+     * Siempre en las N:1 (ManyToOne se define la clave ajena en el lado N (Many)
+     * Para relacionar un fichaje con un usuario
+     * @ManyToOne: Muchos fichajes asociados a un usuario N:1
+     * @JoinColumn(name = "user_id") como queremos que se llame la tabla de la relación N:1
+     */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User userInSign;
 }
