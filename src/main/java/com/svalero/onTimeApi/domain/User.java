@@ -23,7 +23,7 @@ public class User {
     private long id;
 
 //    @Column(unique = true)
-    @NotNull(message = "El campo es obligatorio")
+    @NotNull(message = LITERAL_NOT_NULL)
     private String username;
 
     @NotNull(message = LITERAL_NOT_NULL)
