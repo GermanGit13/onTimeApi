@@ -4,6 +4,7 @@ import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
+import com.svalero.onTimeApi.repository.UserRepository;
 import com.svalero.onTimeApi.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
