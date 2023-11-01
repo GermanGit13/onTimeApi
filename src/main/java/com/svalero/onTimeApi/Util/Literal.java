@@ -11,4 +11,6 @@ public class Literal {
     public static final String LITERAL_NOT_NULL= "El campo es obligatorio";
     public static final String ROL_DEFAULT= "USER";
 
+    public static final String USER_NOT_FOUND= "User not found";
+
 }
