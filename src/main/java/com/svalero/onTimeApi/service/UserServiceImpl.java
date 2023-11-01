@@ -1,6 +1,7 @@
 package com.svalero.onTimeApi.service;
 
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import com.svalero.onTimeApi.repository.UserRepository;
 import jakarta.persistence.RollbackException;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> findByDepartment(String department) {
+    public List<User> findByDepartment(String department) throws DepartmentNotFoundException {
         return userRepository.findAll();
     }
 

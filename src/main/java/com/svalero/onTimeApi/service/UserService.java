@@ -1,6 +1,7 @@
 package com.svalero.onTimeApi.service;
 
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import jakarta.persistence.RollbackException;
 
@@ -15,7 +16,7 @@ public interface UserService {
     void deleteUser(long id) throws UserNotFoundException;
     User modifyUser(long id, User newUser) throws UserNotFoundException, RollbackException;
     List<User> findAll();
-    List<User> findByDepartment(String department);
+    List<User> findByDepartment(String department) throws DepartmentNotFoundException;
     User findById(long id) throws UserNotFoundException;
 
 }

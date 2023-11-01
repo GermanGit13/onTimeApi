@@ -7,11 +7,14 @@ public class Literal {
     public static final String DESK = "desks";
     public static final String BOOKING ="bookings";
 
-    public static final String LITERAL_NOT_BLANK= "El campo no puede estar en blanco";
-    public static final String LITERAL_NOT_NULL= "El campo es obligatorio";
-    public static final String ROL_DEFAULT= "USER";
+    public static final String LITERAL_NOT_BLANK = "El campo no puede estar en blanco";
+    public static final String LITERAL_NOT_NULL = "El campo es obligatorio";
+    public static final String ROL_DEFAULT = "USER";
 
-    public static final String USER_NOT_FOUND= "User not found";
+    public static final String USER_NOT_FOUND = "User not found";
+    public static final String DEPARTMENT_NOT_FOUND = "Department not found";
+    public static final String INTERNAL_ERROR = "Internal Server Error";
+    public static final String BAD_REQUEST = "Bad Request";
 
     public static final String LITERAL_BEGIN_ADD = "Begin add";
     public static final String LITERAL_END_ADD = "End add";
@@ -21,5 +24,7 @@ public class Literal {
     public static final String LITERAL_END_LISTALL = "End list All";
     public static final String LITERAL_BEGIN_GETID = "Begin find id";
     public static final String LITERAL_END_GETID = "End find id";
+    public static final String LITERAL_BEGIN_LISTDEPARTMENT = "Begin list by department";
+    public static final String LITERAL_END_LISTDEPARTMENT = "End list by Department";
 
 }
