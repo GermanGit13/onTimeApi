@@ -4,7 +4,6 @@ import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
-import com.svalero.onTimeApi.repository.UserRepository;
 import com.svalero.onTimeApi.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -104,12 +103,19 @@ public class UserController {
 
     /**
      * ResponseEntity.ok: Devuelve un 200 ok con los datos buscados
+     *
      * @GetMapping("/users/department/{department"): URL donde se devolverán los datos por el department
      */
     @GetMapping("/users/department/{department}")
-    public ResponseEntity<List<User>> getUserByDepartment(@PathVariable String department) throws DepartmentNotFoundException {
-        logger.debug(LITERAL_BEGIN_LISTDEPARTMENT);
+    public Object getUserByDepartment(@PathVariable String department) throws DepartmentNotFoundException {
+         logger.debug(LITERAL_BEGIN_LISTDEPARTMENT);
+
         List<User> users = userService.findByDepartment(department);
+
+        if (users.isEmpty()) {
+            ErrorMessage errorMessage = new ErrorMessage(404, DEPARTMENT_NOT_FOUND);
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // le pasamos el error y el 404 de not found
+        }
         logger.debug(LITERAL_END_LISTDEPARTMENT);
 
         return ResponseEntity.ok(users);
