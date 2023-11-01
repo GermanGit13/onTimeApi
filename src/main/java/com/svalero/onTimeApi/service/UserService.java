@@ -4,6 +4,7 @@ import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import jakarta.persistence.RollbackException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
