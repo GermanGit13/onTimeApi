@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -131,13 +132,14 @@ public class UserController {
 
             logger.debug(LITERAL_BEGIN_LISTALL + USER);
             User user = userService.findUserByUsername(username);
-            System.out.println(user.getUsername() + "/" + user.getPass() + "/" + pass);
 
-            if (user.getUsername() != null && user.getPass().equals(pass)) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+            if (user.getUsername() != null && passwordEncoder.matches(pass, user.getPass())) {
                 return ResponseEntity.ok(user);
             }  else {
-                ErrorMessage errorMessage = new ErrorMessage(400, "Datos Incorrectos");
-                return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // le pasamos el error y el 404 de not found
+                ErrorMessage errorMessage = new ErrorMessage(401, LITERAL_UNAUTHORIZED);
+                return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
             }
     }
 

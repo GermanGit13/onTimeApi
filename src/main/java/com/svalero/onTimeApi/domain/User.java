@@ -26,8 +26,9 @@ public class User {
     @NotNull(message = LITERAL_NOT_NULL)
     private String username;
 
+    @Column(length = 255)
     @NotNull(message = LITERAL_NOT_NULL)
-    @Size(min = 6, max = 16)
+    @Size(min = 6)
     private String pass;
 
     @Column(columnDefinition = ROL_DEFAULT)

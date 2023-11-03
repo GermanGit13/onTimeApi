@@ -28,4 +28,5 @@ public class Literal {
     public static final String LITERAL_END_LISTDEPARTMENT = "End list by Department";
     public static final String LITERAL_BEGIN_LOGIN = "Begin Login";
     public static final String LITERAL_END_LOGIN = "End Login";
+    public static final String LITERAL_UNAUTHORIZED = "Datos Incorrectos";
 }

@@ -7,6 +7,7 @@ import com.svalero.onTimeApi.repository.UserRepository;
 import jakarta.persistence.RollbackException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User addUser(User user) {
+        //Encriptar Pass
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String plainPassword = user.getPass();
+        String hashsedPassword = passwordEncoder.encode(plainPassword);
+        user.setPass(hashsedPassword);
+
         return userRepository.save(user); //Conectamos  con la BBDD mediante el repositorio
     }
 
