@@ -22,16 +22,16 @@ public class User {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
 
-//    @Column(unique = true)
-//    @NotNull(message = LITERAL_NOT_NULL)
+    @Column(unique = true)
+    @NotNull(message = LITERAL_NOT_NULL)
     private String username;
 
-//    @NotNull(message = LITERAL_NOT_NULL)
-//    @Size(min = 6, max = 16)
+    @NotNull(message = LITERAL_NOT_NULL)
+    @Size(min = 6, max = 16)
     private String pass;
 
-//    @Column(columnDefinition = ROL_DEFAULT)
-//    @NotNull(message = LITERAL_NOT_NULL)
+    @Column(columnDefinition = ROL_DEFAULT)
+    @NotNull(message = LITERAL_NOT_NULL)
     private String rol;
 
     @Column
@@ -50,8 +50,8 @@ public class User {
     @Column
     private String address;
 
-//    @Column
-//    @Size(min = 9)
+    @Column
+    @Size(min = 9)
     private String phone;
 
     @Column

@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalTime;
 
 import static com.svalero.onTimeApi.Util.Literal.*;
 
@@ -34,12 +33,12 @@ public class Sign {
     @Column
     @NotBlank(message = LITERAL_NOT_BLANK)
     @NotNull(message = LITERAL_NOT_NULL)
-    private Date inTime;
+    private LocalTime inTime;
 
     @Column
     @NotBlank(message = LITERAL_NOT_BLANK)
     @NotNull(message = LITERAL_NOT_NULL)
-    private Time outTime;
+    private LocalTime outTime;
 
     @Column
     private String incidenceIn;

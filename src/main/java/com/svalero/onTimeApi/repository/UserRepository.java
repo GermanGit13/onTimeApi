@@ -2,6 +2,7 @@ package com.svalero.onTimeApi.repository;
 
 import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
+import com.svalero.onTimeApi.exception.UserNotFoundException;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +23,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findAll();
     List<User> findByDepartment(String department)throws DepartmentNotFoundException;
-
+    User findUserByUsernameAndPass(String username, String pass) throws UserNotFoundException;
+    User findUserByUsername(String username) throws UserNotFoundException;
 }
