@@ -13,6 +13,7 @@ public class Literal {
 
     public static final String USER_NOT_FOUND = "User not found";
     public static final String DEPARTMENT_NOT_FOUND = "Department not found";
+    public static final String SIGN_NOT_FOUND = "Sign not found";
     public static final String INTERNAL_ERROR = "Internal Server Error";
     public static final String BAD_REQUEST = "Bad Request";
 
@@ -30,5 +31,6 @@ public class Literal {
     public static final String LITERAL_END_LISTDEPARTMENT = "End list by Department";
     public static final String LITERAL_BEGIN_LOGIN = "Begin Login";
     public static final String LITERAL_END_LOGIN = "End Login";
+
     public static final String LITERAL_UNAUTHORIZED = "Datos Incorrectos";
 }

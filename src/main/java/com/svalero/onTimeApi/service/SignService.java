@@ -2,7 +2,12 @@ package com.svalero.onTimeApi.service;
 
 
 import com.svalero.onTimeApi.domain.Sign;
+import com.svalero.onTimeApi.exception.SignNotFoundException;
+import com.svalero.onTimeApi.exception.UserNotFoundException;
+import jakarta.persistence.RollbackException;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /** 2) Capa donde va a estar la lógica, tendremos una interface por cada clase Java del domain
@@ -10,5 +15,10 @@ import java.util.List;
  */
 public interface SignService {
 
+    Sign addSign (Sign sign, long userId) throws UserNotFoundException;
+    void deleteSign (long id) throws SignNotFoundException;
+    Sign modifySign(long id, Sign newSign) throws SignNotFoundException, RollbackException;
     List<Sign> findAll();
+    Sign findById(long id) throws SignNotFoundException;
+
 }

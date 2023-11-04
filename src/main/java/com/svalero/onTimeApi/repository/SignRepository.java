@@ -1,6 +1,7 @@
 package com.svalero.onTimeApi.repository;
 
 import com.svalero.onTimeApi.domain.Sign;
+import com.svalero.onTimeApi.exception.UserNotFoundException;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +20,6 @@ public interface SignRepository extends CrudRepository<Sign, Long> {
      */
 
     List<Sign> findAll();
+
 
 }

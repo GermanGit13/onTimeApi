@@ -70,7 +70,6 @@ public class UserController {
         return ResponseEntity.noContent().build(); // Devuelve nada al borrar o la excepción cuando falla
     }
 
-    // TODO Modified
     /**
      * @PutMapping("/users/{id}"): Método para modificar
      * @PathVariable: Para indicar que el parámetro que le pasamos
