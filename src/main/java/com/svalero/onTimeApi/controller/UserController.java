@@ -5,6 +5,7 @@ import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import com.svalero.onTimeApi.service.UserService;
+import jakarta.persistence.RollbackException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,15 @@ public class UserController {
      * @PathVariable: Para indicar que el parámetro que le pasamos
      * @RequestBody User user para pasarle los datos del objeto a modificar
      */
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> modifyUser(@PathVariable long id, @RequestBody User user) throws UserNotFoundException, RollbackException {
+        logger.debug(LITERAL_BEGIN_MODIFY + USER);
+        User modifiedUser = userService.modifyUser(id, user);
+        logger.debug(LITERAL_END_MODIFY + USER);
+
+        return ResponseEntity.status(HttpStatus.OK).body(modifiedUser);
+    }
+
 
     /**
      * Buscar todos los usuarios

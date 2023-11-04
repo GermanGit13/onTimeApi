@@ -7,6 +7,7 @@ import com.svalero.onTimeApi.repository.UserRepository;
 import jakarta.persistence.RollbackException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,14 @@ public class UserServiceImpl implements UserService{
         User existingUser = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         newUser.setId(id);
+
+        if (!passwordEncoder.matches(newUser.getPass(), existingUser.getPass())) {
+            String plainPassword = newUser.getPass();
+            String hashsedPassword = passwordEncoder.encode(plainPassword);
+            newUser.setPass(hashsedPassword);
+        } else {
+            newUser.setPass(existingUser.getPass());
+        }
 
         modelMapper.map(newUser, existingUser);
         return userRepository.save(existingUser);
