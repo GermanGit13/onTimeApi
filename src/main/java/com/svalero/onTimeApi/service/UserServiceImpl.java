@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public User addUser(User user) {
-        //Encriptar Pass
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String plainPassword = user.getPass();
         String hashsedPassword = passwordEncoder.encode(plainPassword);
         user.setPass(hashsedPassword);

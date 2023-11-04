@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.DigestUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +35,8 @@ public class UserController {
      */
     @Autowired
     private UserService userService;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class); //Creamos el objeto capaz de pintar las trazas en el log y lo asociamos a la clase que queremos controlar
 
@@ -132,8 +133,6 @@ public class UserController {
 
             logger.debug(LITERAL_BEGIN_LISTALL + USER);
             User user = userService.findUserByUsername(username);
-
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
             if (user.getUsername() != null && passwordEncoder.matches(pass, user.getPass())) {
                 return ResponseEntity.ok(user);
