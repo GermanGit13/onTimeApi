@@ -6,6 +6,10 @@ public class Literal {
     public static final String SIGN = "signs";
     public static final String DESK = "desks";
     public static final String BOOKING ="bookings";
+    public static final String INTIME = "inTime";
+    public static final String INCIDENCEIN = "incidenceIn";
+    public static final String INCIDENCEOUT = "incidenceOut";
+    public static final String OUTTIME = "outTime";
 
     public static final String LITERAL_NOT_BLANK = "El campo no puede estar en blanco";
     public static final String LITERAL_NOT_NULL = "El campo es obligatorio";
@@ -33,4 +37,5 @@ public class Literal {
     public static final String LITERAL_END_LOGIN = "End Login";
 
     public static final String LITERAL_UNAUTHORIZED = "Datos Incorrectos";
+
 }

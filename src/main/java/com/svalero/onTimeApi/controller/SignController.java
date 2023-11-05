@@ -40,7 +40,7 @@ public class SignController {
      */
     @PostMapping("/users/{userId}/signs")
     @Validated
-    public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, Sign sign) throws UserNotFoundException {
+    public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, @RequestBody Sign sign) throws UserNotFoundException {
         logger.debug(LITERAL_BEGIN_ADD + SIGN);
         Sign newSign = signService.addSign(sign, userId);
         return new ResponseEntity<>(newSign, HttpStatus.CREATED);

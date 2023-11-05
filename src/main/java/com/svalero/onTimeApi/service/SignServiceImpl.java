@@ -1,5 +1,6 @@
 package com.svalero.onTimeApi.service;
 
+import com.svalero.onTimeApi.Util.DateUtils;
 import com.svalero.onTimeApi.domain.Sign;
 import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
@@ -12,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /** 3) Para implementar la interface de cada service
@@ -30,21 +33,13 @@ public class SignServiceImpl implements SignService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @Override
     public Sign addSign(Sign sign, long userId) throws UserNotFoundException {
-        Sign newSign = sign;
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        String fecha = String.valueOf(newSign.getDay());
-//        try {
-//            newSign.setDay(simpleDateFormat.parse(fecha));
-//        } catch (ParseException e)
-//    }
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        newSign.setUserInSign(user);
+        sign.setUserInSign(user);
 
-        return signRepository.save(newSign);
+        return signRepository.save(sign);
     }
 
     @Override

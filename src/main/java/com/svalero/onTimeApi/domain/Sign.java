@@ -30,17 +30,17 @@ public class Sign {
     @NotNull(message = LITERAL_NOT_NULL)
     private LocalDate day;
 
-    @Column
-    private LocalTime inTime;
+    @Column(name = INTIME)
+    private LocalTime in_time;
 
-    @Column
-    private LocalTime outTime;
+    @Column(name = OUTTIME)
+    private LocalTime out_time;
 
-    @Column
-    private String incidenceIn;
+    @Column(name = INCIDENCEIN)
+    private String incidence_in;
 
-    @Column
-    private String incidendeOut;
+    @Column(name = INCIDENCEOUT)
+    private String incidende_out;
 
     /**
      * Siempre en las N:1 (ManyToOne se define la clave ajena en el lado N (Many)
