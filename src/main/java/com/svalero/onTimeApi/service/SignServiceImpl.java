@@ -52,10 +52,13 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public Sign modifySign(long id, Sign newSign) throws SignNotFoundException, RollbackException {
-        Sign existingSign = signRepository.findById(id)
+    public Sign modifySign(long idSign, long idUser, Sign newSign) throws SignNotFoundException, UserNotFoundException, RollbackException {
+        Sign existingSign = signRepository.findById(idSign)
                 .orElseThrow(SignNotFoundException::new);
-        newSign.setId(id);
+        User existingUser = userRepository.findById(idUser)
+                        .orElseThrow(UserNotFoundException::new);
+        newSign.setId(idSign);
+        newSign.setUserInSign(existingUser);
 
         modelMapper.map(newSign, existingSign);
         return signRepository.save(existingSign);

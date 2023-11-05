@@ -60,12 +60,20 @@ public class SignController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO Modified
     /**
-     * @PutMapping("/signs/{id}"): Método para modificar
+     * @PutMapping("/signs/{idSign}/users/{idUser}"): Método para modificar
      * @PathVariable: Para indicar que el parámetro que le pasamos
      * @RequestBody User user para pasarle los datos del objeto a modificar
      */
+    @PutMapping("/signs/{idSign}/users/{idUser}")
+    public ResponseEntity<Sign> modifySign(@PathVariable long idSign, @PathVariable long idUser, @RequestBody Sign sign) throws SignNotFoundException, UserNotFoundException {
+        logger.debug(LITERAL_BEGIN_MODIFY + SIGN);
+        Sign modifySign = signService.modifySign(idSign,idUser, sign);
+        logger.debug(LITERAL_END_MODIFY + SIGN);
+
+        return ResponseEntity.status(HttpStatus.OK).body(modifySign);
+    }
+
 
 
     /**

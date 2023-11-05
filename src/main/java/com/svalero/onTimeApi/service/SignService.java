@@ -17,7 +17,7 @@ public interface SignService {
 
     Sign addSign (Sign sign, long userId) throws UserNotFoundException;
     void deleteSign (long id) throws SignNotFoundException;
-    Sign modifySign(long id, Sign newSign) throws SignNotFoundException, RollbackException;
+    Sign modifySign(long idSign, long idUser, Sign newSign) throws SignNotFoundException, UserNotFoundException, RollbackException;
     List<Sign> findAll();
     Sign findById(long id) throws SignNotFoundException;
 
