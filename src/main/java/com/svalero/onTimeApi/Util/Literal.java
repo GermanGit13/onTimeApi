@@ -18,6 +18,7 @@ public class Literal {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String DEPARTMENT_NOT_FOUND = "Department not found";
     public static final String SIGN_NOT_FOUND = "Sign not found";
+    public static final String DESK_NOT_FOUND = "Desk not found";
     public static final String INTERNAL_ERROR = "Internal Server Error";
     public static final String BAD_REQUEST = "Bad Request";
 

@@ -23,7 +23,6 @@ public class Desk {
     private long id;
 
     @Column
-    @NotBlank(message = LITERAL_NOT_BLANK)
     @NotNull(message = LITERAL_NOT_NULL)
     private int floor;
 
