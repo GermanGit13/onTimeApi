@@ -43,7 +43,7 @@ public class UserController {
 
     /**
      * ResponseEntity<User>: Devolvemos el objeto y un 201
-     * @PostMapping("/user"): Método para dar de alta en la BBDD user
+     * @PostMapping("/users"): Método para dar de alta en la BBDD user
      * @RequestBody: Los datos van en el cuerpo de la llamada como codificados
      * @Valid Para decir que valide los campos a la hora de añadir un nuevo objeto,  los campos los definidos en el domain de que forma no pueden ser introducidos o dejados en blanco por ejemplo en la BBDD
      */
