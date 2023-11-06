@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 import static com.svalero.onTimeApi.Util.Literal.*;
@@ -24,18 +26,15 @@ public class Booking {
 
     @Column
     @NotNull(message = LITERAL_NOT_NULL)
-    @NotBlank(message = LITERAL_NOT_BLANK)
-    private Date day;
+    private LocalDate day;
 
     @Column
     @NotNull(message = LITERAL_NOT_NULL)
-    @NotBlank(message = LITERAL_NOT_BLANK)
-    private Time inBooking;
+    private LocalTime in_booking;
 
     @Column
     @NotNull(message = LITERAL_NOT_NULL)
-    @NotBlank(message = LITERAL_NOT_BLANK)
-    private Time outBooking;
+    private LocalTime out_booking;
 
     /**
      * Siempre en las N:1 (ManyToOne se define la clave ajena en el lado N (Many)

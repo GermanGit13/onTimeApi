@@ -1,7 +1,6 @@
 package com.svalero.onTimeApi.controller;
 
 import com.svalero.onTimeApi.domain.Sign;
-import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
