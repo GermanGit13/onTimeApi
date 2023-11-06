@@ -28,7 +28,7 @@ public class Desk {
 
     private boolean desk;
 
-    private boolean meetingRoom;
+    private boolean meeting_room;
 
     /**
      * Para relacionar los sitios con las  reservas: Un sitio puede tener x reservas

@@ -10,14 +10,8 @@ import com.svalero.onTimeApi.repository.UserRepository;
 import jakarta.persistence.RollbackException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /** 3) Para implementar la interface de cada service

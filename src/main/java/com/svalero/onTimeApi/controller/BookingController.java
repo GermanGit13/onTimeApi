@@ -1,14 +1,13 @@
 package com.svalero.onTimeApi.controller;
 
-import com.svalero.onTimeApi.domain.Sign;
-import com.svalero.onTimeApi.exception.ErrorMessage;
-import com.svalero.onTimeApi.exception.SignNotFoundException;
-import com.svalero.onTimeApi.exception.UserNotFoundException;
-import com.svalero.onTimeApi.service.SignService;
+import com.svalero.onTimeApi.domain.Booking;
+import com.svalero.onTimeApi.exception.*;
+import com.svalero.onTimeApi.service.BookingService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.SpringApplicationEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,97 +26,98 @@ import static com.svalero.onTimeApi.Util.Literal.*;
  * @RestController: para que spring boot sepa que es la capa que se ve al exterior
  */
 @RestController
-public class SignController {
+public class BookingController {
 
     /**
      * Llamamos al SignService el cual llama al SignRepository y a su vez este llama a la BBDD
      */
     @Autowired
-    private SignService signService;
+    private BookingService bookingService;
 
-    private final Logger logger = LoggerFactory.getLogger(SignController.class);
+    private final Logger logger = LoggerFactory.getLogger(BookingController.class);
 
     /**
-     * ResponseEntity<Sign>: Devolvemos el objeto y un 201
-     * @PostMapping("/users/{userId}/signs"): Método para dar de alta en la BBDD sign
+     * ResponseEntity<Booking>: Devolvemos el objeto y un 201
+     * @PostMapping("/users/{userId}/desks/{id}/bookings"): Método para dar de alta en la BBDD booking
      * @RequestBody: Los datos van en el cuerpo de la llamada como codificados
      * @Valid Para decir que valide los campos a la hora de añadir un nuevo objeto,  los campos los definidos en el domain de que forma no pueden ser introducidos o dejados en blanco por ejemplo en la BBDD
      */
-    @PostMapping("/users/{userId}/signs")
+    @PostMapping("/users/{userId}/desks/{deskId}/bookings")
     @Validated
-    public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, @RequestBody Sign sign) throws UserNotFoundException {
-        logger.debug(LITERAL_BEGIN_ADD + SIGN);
-        Sign newSign = signService.addSign(sign, userId);
-        return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+    public ResponseEntity<Booking> addBooking(@Valid @PathVariable long userId, @PathVariable long deskId, @RequestBody Booking booking) throws UserNotFoundException, DeskNotFoundException {
+        logger.debug(LITERAL_BEGIN_ADD + BOOKING);
+        Booking newBooking = bookingService.addBooking(booking,userId,deskId);
+        logger.debug(LITERAL_END_ADD + BOOKING);
+        return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }
 
     /**
      * ResponseEntity<Void>: Vacio, solo tiene código de estado
-     * @DeleteMapping("/signs/{id}"): Método para dar borrar por id
+     * @DeleteMapping("/bookings/{id}"): Método para dar borrar por id
      * @PathVariable: Para indicar que el parámetro que le pasamos por la url
      */
-    @DeleteMapping("/signs/{id}")
-    public ResponseEntity<Void> deleteSign(@PathVariable long id) throws SignNotFoundException {
-        logger.debug(LITERAL_BEGIN_DELETE + SIGN);
-        signService.deleteSign(id);
-        logger.debug(LITERAL_END_DELETE + SIGN);
+    @DeleteMapping("/bookings/{id}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable long id) throws BookingNotFoundException{
+        logger.debug(LITERAL_BEGIN_DELETE + BOOKING);
+        bookingService.deleteBooking(id);
+        logger.debug(LITERAL_END_DELETE+ BOOKING);
 
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * @PutMapping("/signs/{idSign}/users/{idUser}"): Método para modificar
+     * @PutMapping("/bookings/{idBooking}/users/{idUser}/desks/{idDesk}"): Método para modificar
      * @PathVariable: Para indicar que el parámetro que le pasamos
      * @RequestBody User user para pasarle los datos del objeto a modificar
      */
-    @PutMapping("/signs/{idSign}/users/{idUser}")
-    public ResponseEntity<Sign> modifySign(@PathVariable long idSign, @PathVariable long idUser, @RequestBody Sign sign) throws SignNotFoundException, UserNotFoundException {
-        logger.debug(LITERAL_BEGIN_MODIFY + SIGN);
-        Sign modifySign = signService.modifySign(idSign,idUser, sign);
-        logger.debug(LITERAL_END_MODIFY + SIGN);
+    @PutMapping("/bookings/{idBooking}/users/{idUser}/desks/{idDesk}")
+    public ResponseEntity<Booking> modifyBooking(@PathVariable long idBooking, @PathVariable long idUser, @PathVariable long idDesk, @RequestBody Booking newBooking) throws BookingNotFoundException, UserNotFoundException, DeskNotFoundException {
+        logger.debug(LITERAL_BEGIN_MODIFY + BOOKING);
+        Booking modifyBooking = bookingService.modifyBooking(idBooking, idUser, idDesk, newBooking);
+        logger.debug(LITERAL_END_MODIFY + BOOKING);
 
-        return ResponseEntity.status(HttpStatus.OK).body(modifySign);
+        return ResponseEntity.status(HttpStatus.OK).body(modifyBooking);
     }
 
     /**
-     * Buscar todos los fichajes
-     * @GetMapping("/signs"): URL donde se devolverán los datos
+     * Buscar todos las reservas
+     * @GetMapping("/bookings"): URL donde se devolverán los datos
      * @RequestParam: Son las QueryParam se usa para poder hacer filtrados en las busquedas "Where"
      */
-    @GetMapping("/signs")
-    public ResponseEntity<Object> getSign(){
-        logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-        List<Sign> signs = signService.findAll();
-        logger.debug(LITERAL_END_LISTALL + SIGN);
+    @GetMapping("/bookings")
+    public ResponseEntity<Object> getBooking() {
+        logger.debug(LITERAL_END_LISTALL + BOOKING);
+        List<Booking> bookings = bookingService.findAll();
+        logger.debug(LITERAL_END_LISTALL + BOOKING);
 
-        return ResponseEntity.ok(signs);
+        return ResponseEntity.ok(bookings);
     }
 
     /**
      * ResponseEntity.ok: Devuelve un 200 ok con los datos buscados
-     * @GetMapping("/signs/id"): URL donde se devolverán los datos por el código Id
+     * @GetMapping("/bookings/id"): URL donde se devolverán los datos por el código Id
      * @PathVariable: Para indicar que el parámetro que le pasamos en el String es que debe ir en la URL
      * throws MatchNotFoundException: capturamos la exception y se la mandamos al manejador de excepciones creado más abajo @ExceptionHandler
      */
-    @GetMapping("signs/{id}")
-    public ResponseEntity<Sign> findById(@PathVariable long id) throws SignNotFoundException {
-        logger.debug(LITERAL_BEGIN_GETID + SIGN);
-        Sign sign = signService.findById(id);
-        logger.debug(LITERAL_END_GETID + SIGN);
+    @GetMapping("/bookings/{id}")
+    public ResponseEntity<Booking> findById(@PathVariable long id) throws BookingNotFoundException {
+        logger.debug(LITERAL_BEGIN_GETID + BOOKING);
+        Booking booking = bookingService.finfById(id);
+        logger.debug((LITERAL_END_GETID + BOOKING));
 
-        return ResponseEntity.ok(sign);
+        return ResponseEntity.ok(booking);
     }
 
     /**
-     * @ExceptionHandler(SignNotFoundException.class): manejador de excepciones, recoge la que le pasamos por parametro en este caso SignNotFoundException.class
+     * @ExceptionHandler(BookingNotFoundException.class): manejador de excepciones, recoge la que le pasamos por parametro en este caso SignNotFoundException.class
      * ResponseEntity<?>: Con el interrogante porque no sabe que nos devolver
      * @return
      */
     @ExceptionHandler(SignNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleSignNotFoundException(SignNotFoundException snfe) {
-        logger.error(snfe.getMessage(), snfe); //Mandamos la traza de la exception al log, con su mensaje y su traza
-        snfe.printStackTrace(); //Para la trazabilidad de la exception
-        ErrorMessage errorMessage = new ErrorMessage(404, snfe.getMessage());
+    public ResponseEntity<ErrorMessage> handleBookingNotFoundException(BookingNotFoundException bnfe) {
+        logger.error(bnfe.getMessage(), bnfe); //Mandamos la traza de la exception al log, con su mensaje y su traza
+        bnfe.printStackTrace(); //Para la trazabilidad de la exception
+        ErrorMessage errorMessage = new ErrorMessage(404, bnfe.getMessage());
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // le pasamos el error y el 404 de not found
     }
 
