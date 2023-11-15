@@ -18,5 +18,5 @@ public interface SignService {
     Sign modifySign(long idSign, long idUser, Sign newSign) throws SignNotFoundException, UserNotFoundException, RollbackException;
     List<Sign> findAll();
     Sign findById(long id) throws SignNotFoundException;
-
+    List findByDepartment(String userInSign_department);
 }

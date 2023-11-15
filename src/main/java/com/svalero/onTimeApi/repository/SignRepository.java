@@ -20,6 +20,5 @@ public interface SignRepository extends CrudRepository<Sign, Long> {
      */
 
     List<Sign> findAll();
-
-
+    List<Sign> findAllByUserInSign_Department(String userInSign_department);
 }

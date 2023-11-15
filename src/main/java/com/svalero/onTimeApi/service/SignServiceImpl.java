@@ -68,4 +68,9 @@ public class SignServiceImpl implements SignService {
         return signRepository.findById(id)
                 .orElseThrow(SignNotFoundException::new);
     }
+
+    @Override
+    public List findByDepartment(String userInSign_department) {
+        return signRepository.findAllByUserInSign_Department(userInSign_department);
+    }
 }

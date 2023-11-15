@@ -141,12 +141,16 @@ public class UserController {
                                            @RequestParam (name = "pass", defaultValue = "") String pass) throws UserNotFoundException {
 
             logger.debug(LITERAL_BEGIN_LISTALL + USER);
-            User user = userService.findUserByUsername(username);
 
+            User user = userService.findUserByUsername(username);
+            System.out.println("Datos que recibo: " + username + " / " + pass);
+            System.out.println("Datos despues de buscar el usuario por username : " + user.getUsername() + " / " + user.getPass());
             if (user.getUsername() != null && passwordEncoder.matches(pass, user.getPass())) {
+                System.out.println("Despues de verficar pass: " + user.getUsername() + " / " + user.getPass());
                 return ResponseEntity.ok(user);
             }  else {
                 ErrorMessage errorMessage = new ErrorMessage(401, LITERAL_UNAUTHORIZED);
+                System.out.println("Despues de verficar pass Error: " + user.getUsername() + " / " + user.getPass());
                 return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
             }
     }

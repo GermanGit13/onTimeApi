@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,9 @@ public class SignController {
     @PostMapping("/users/{userId}/signs")
     @Validated
     public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, @RequestBody Sign sign) throws UserNotFoundException {
+        System.out.println("Usuario registra fichaje: " + userId );
+        System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
+        System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidende_out());
         logger.debug(LITERAL_BEGIN_ADD + SIGN);
         Sign newSign = signService.addSign(sign, userId);
         return new ResponseEntity<>(newSign, HttpStatus.CREATED);
@@ -85,11 +89,16 @@ public class SignController {
      * @RequestParam: Son las QueryParam se usa para poder hacer filtrados en las busquedas "Where"
      */
     @GetMapping("/signs")
-    public ResponseEntity<Object> getSign(){
-        logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-        List<Sign> signs = signService.findAll();
-        logger.debug(LITERAL_END_LISTALL + SIGN);
+    public ResponseEntity<Object> getSigns(@RequestParam (name = "userInSign_department", defaultValue = "", required = false) String deparment) {
+        System.out.println("List Signs Llamada ");
 
+        if (!deparment.equals("")) {
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            return  ResponseEntity.ok(signService.findByDepartment(deparment));
+        }
+
+        logger.debug(LITERAL_END_LISTALL + SIGN);
+        List<Sign> signs = signService.findAll();
         return ResponseEntity.ok(signs);
     }
 
