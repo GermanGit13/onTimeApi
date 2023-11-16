@@ -2,6 +2,7 @@ package com.svalero.onTimeApi.service;
 
 
 import com.svalero.onTimeApi.domain.Sign;
+import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import jakarta.persistence.RollbackException;
@@ -19,4 +20,5 @@ public interface SignService {
     List<Sign> findAll();
     Sign findById(long id) throws SignNotFoundException;
     List findByDepartment(String userInSign_department);
+    List findByUserInSign(User user);
 }

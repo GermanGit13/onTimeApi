@@ -1,6 +1,5 @@
 package com.svalero.onTimeApi.service;
 
-import com.svalero.onTimeApi.Util.DateUtils;
 import com.svalero.onTimeApi.domain.Sign;
 import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
@@ -72,5 +71,10 @@ public class SignServiceImpl implements SignService {
     @Override
     public List findByDepartment(String userInSign_department) {
         return signRepository.findAllByUserInSign_Department(userInSign_department);
+    }
+
+    @Override
+    public List findByUserInSign(User user) {
+        return signRepository.findByUserInSign(user);
     }
 }

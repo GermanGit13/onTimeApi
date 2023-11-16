@@ -1,10 +1,12 @@
 package com.svalero.onTimeApi.controller;
 
 import com.svalero.onTimeApi.domain.Sign;
+import com.svalero.onTimeApi.domain.User;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import com.svalero.onTimeApi.service.SignService;
+import com.svalero.onTimeApi.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,8 @@ public class SignController {
      */
     @Autowired
     private SignService signService;
+    @Autowired
+    private UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(SignController.class);
 
@@ -77,6 +80,7 @@ public class SignController {
     @PutMapping("/signs/{idSign}/users/{idUser}")
     public ResponseEntity<Sign> modifySign(@PathVariable long idSign, @PathVariable long idUser, @RequestBody Sign sign) throws SignNotFoundException, UserNotFoundException {
         logger.debug(LITERAL_BEGIN_MODIFY + SIGN);
+        User user = userService.findById(idUser);
         Sign modifySign = signService.modifySign(idSign,idUser, sign);
         logger.debug(LITERAL_END_MODIFY + SIGN);
 
@@ -89,12 +93,14 @@ public class SignController {
      * @RequestParam: Son las QueryParam se usa para poder hacer filtrados en las busquedas "Where"
      */
     @GetMapping("/signs")
-    public ResponseEntity<Object> getSigns(@RequestParam (name = "userInSign_department", defaultValue = "", required = false) String deparment) {
-        System.out.println("List Signs Llamada ");
+    public ResponseEntity<Object> getSigns(@RequestParam (name = "userInSign_department", defaultValue = "", required = false) String department) {
+        System.out.println("List Signs All Signs ");
 
-        if (!deparment.equals("")) {
+        if (!department.equals("")) {
+            System.out.println("List Signs by department: " + department);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            return  ResponseEntity.ok(signService.findByDepartment(deparment));
+            List<Sign> signs = signService.findByDepartment(department);
+            return  ResponseEntity.ok(signs);
         }
 
         logger.debug(LITERAL_END_LISTALL + SIGN);
@@ -117,6 +123,18 @@ public class SignController {
         return ResponseEntity.ok(sign);
     }
 
+    @GetMapping("/users/{userId}/signs")
+    public ResponseEntity<Object> findByUserInSign(@PathVariable String userId) throws UserNotFoundException {
+        logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+        long userIdNew = Long.parseLong(userId);
+        User user = userService.findById(userIdNew);
+        System.out.println("List Signs by User: " + user.getUsername());
+        List<Sign> signs = signService.findByUserInSign(user);
+        logger.debug(LITERAL_END_LISTALL + SIGN);
+
+        return ResponseEntity.ok(signs);
+    }
+
     /**
      * @ExceptionHandler(SignNotFoundException.class): manejador de excepciones, recoge la que le pasamos por parametro en este caso SignNotFoundException.class
      * ResponseEntity<?>: Con el interrogante porque no sabe que nos devolver
@@ -127,6 +145,19 @@ public class SignController {
         logger.error(snfe.getMessage(), snfe); //Mandamos la traza de la exception al log, con su mensaje y su traza
         snfe.printStackTrace(); //Para la trazabilidad de la exception
         ErrorMessage errorMessage = new ErrorMessage(404, snfe.getMessage());
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // le pasamos el error y el 404 de not found
+    }
+
+    /**
+     * @ExceptionHandler(UserNotFoundException.class): manejador de excepciones, recoge la que le pasamos por parametro en este caso UserNotFoundException.class
+     * ResponseEntity<?>: Con el interrogante porque no sabe que nos devolver
+     * @return
+     */
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleUserNotFoundException(UserNotFoundException unfe) {
+        logger.error(unfe.getMessage(), unfe); //Mandamos la traza de la exception al log, con su mensaje y su traza
+        unfe.printStackTrace(); //Para la trazabilidad de la exception
+        ErrorMessage errorMessage = new ErrorMessage(404, unfe.getMessage());
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // le pasamos el error y el 404 de not found
     }
 
