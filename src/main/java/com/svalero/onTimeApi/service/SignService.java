@@ -7,6 +7,7 @@ import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import jakarta.persistence.RollbackException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /** 2) Capa donde va a estar la lógica, tendremos una interface por cada clase Java del domain
@@ -20,5 +21,12 @@ public interface SignService {
     List<Sign> findAll();
     Sign findById(long id) throws SignNotFoundException;
     List findByDepartment(String userInSign_department);
+
     List findByUserInSign(User user);
+    List findByDay(LocalDate day);
+    List<Sign> findAllByUserInSign_DepartmentAndDay(String userInSign_department, LocalDate day);
+    List<Sign> findByUserInSignAndDay(User user, LocalDate day);
+
+//    List findByDayBetweenAndDay(LocalDate firstDay, LocalDate secondDay);
+
 }

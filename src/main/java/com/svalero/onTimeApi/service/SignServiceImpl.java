@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /** 3) Para implementar la interface de cada service
@@ -77,4 +78,26 @@ public class SignServiceImpl implements SignService {
     public List findByUserInSign(User user) {
         return signRepository.findByUserInSign(user);
     }
+
+    @Override
+    public List findByDay(LocalDate day) {
+        return signRepository.findByDay(day);
+    }
+
+    @Override
+    public List<Sign> findAllByUserInSign_DepartmentAndDay(String userInSign_department, LocalDate day) {
+        return signRepository.findAllByUserInSign_DepartmentAndDay(userInSign_department, day);
+    }
+
+    @Override
+    public List<Sign> findByUserInSignAndDay(User user, LocalDate day) {
+
+
+        return signRepository.findByUserInSignAndDay(user, day);
+    }
+
+//    @Override
+//    public List findByDayBetweenAndDay(LocalDate firstDay, LocalDate secondDay) {
+//        return signRepository.findByDayBetweenAndDay(firstDay, secondDay);
+//    }
 }

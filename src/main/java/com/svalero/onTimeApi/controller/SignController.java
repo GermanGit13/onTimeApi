@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,14 +94,31 @@ public class SignController {
      * @RequestParam: Son las QueryParam se usa para poder hacer filtrados en las busquedas "Where"
      */
     @GetMapping("/signs")
-    public ResponseEntity<Object> getSigns(@RequestParam (name = "userInSign_department", defaultValue = "", required = false) String department) {
+    public ResponseEntity<Object> getSigns(@RequestParam(name = "userInSign_department", defaultValue = "", required = false) String department,
+                                           @RequestParam(name = "day", defaultValue = "", required = false) String day) {
         System.out.println("List Signs All Signs ");
 
-        if (!department.equals("")) {
+        if (!department.equals("") && day.equals("")) {
             System.out.println("List Signs by department: " + department);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
             List<Sign> signs = signService.findByDepartment(department);
             return  ResponseEntity.ok(signs);
+        }
+
+        if (department.equals("") && !day.equals("")) {
+            System.out.println("List Signs by Day: " + day);
+            LocalDate date = LocalDate.parse(day);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findByDay(date);
+            return ResponseEntity.ok(signs);
+        }
+
+        if (!department.equals("") && !day.equals("")) {
+            System.out.println("List Signs by department and Day: " + department + " / " + day);
+            LocalDate date = LocalDate.parse(day);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDay(department, date);
+            return ResponseEntity.ok(signs);
         }
 
         logger.debug(LITERAL_END_LISTALL + SIGN);
@@ -124,15 +142,32 @@ public class SignController {
     }
 
     @GetMapping("/users/{userId}/signs")
-    public ResponseEntity<Object> findByUserInSign(@PathVariable String userId) throws UserNotFoundException {
-        logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-        long userIdNew = Long.parseLong(userId);
-        User user = userService.findById(userIdNew);
-        System.out.println("List Signs by User: " + user.getUsername());
-        List<Sign> signs = signService.findByUserInSign(user);
-        logger.debug(LITERAL_END_LISTALL + SIGN);
+    public ResponseEntity<Object> findByUserInSign(@PathVariable String userId,
+                                                   @RequestParam(name = "day", defaultValue = "", required = false) String day) throws UserNotFoundException {
 
-        return ResponseEntity.ok(signs);
+        if (!userId.equals("") && day.equals("")) {
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            long userIdNew = Long.parseLong(userId);
+            User user = userService.findById(userIdNew);
+            System.out.println("List Signs by User: " + user.getUsername());
+            List<Sign> signs = signService.findByUserInSign(user);
+            logger.debug(LITERAL_END_LISTALL + SIGN);
+
+            return ResponseEntity.ok(signs);
+        }
+
+        if (!userId.equals("") && !day.equals("")) {
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            long userIdNew = Long.parseLong(userId);
+            User user = userService.findById(userIdNew);
+            LocalDate date = LocalDate.parse(day);
+            System.out.println("List Signs by User and Day: " + user.getUsername() + " / " + day);
+            List<Sign> signs = signService.findByUserInSignAndDay(user, date);
+
+            return  ResponseEntity.ok(signs);
+        }
+
+        return null;
     }
 
     /**
