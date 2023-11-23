@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 /** 3) Para implementar la interface de cada service
@@ -70,17 +71,17 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public List findByDepartment(String userInSign_department) {
+    public List<Sign> findByDepartment(String userInSign_department) {
         return signRepository.findAllByUserInSign_Department(userInSign_department);
     }
 
     @Override
-    public List findByUserInSign(User user) {
+    public List<Sign> findByUserInSign(User user) {
         return signRepository.findByUserInSign(user);
     }
 
     @Override
-    public List findByDay(LocalDate day) {
+    public List<Sign> findByDay(LocalDate day) {
         return signRepository.findByDay(day);
     }
 
@@ -96,8 +97,23 @@ public class SignServiceImpl implements SignService {
         return signRepository.findByUserInSignAndDay(user, day);
     }
 
+    @Override
+    public List<Sign> findByUserInSign_Name(String name) {
+        return signRepository.findByUserInSign_Name(name);
+    }
+
+    @Override
+    public List<Sign> findByDayBetween(LocalDate firstDay, LocalDate secondDay) {
+        return signRepository.findByDayBetween(firstDay, secondDay);
+    }
+
+    @Override
+    public List<Sign> findByUserInSign_NameContains(String name) {
+        return signRepository.findByUserInSign_NameContains(name);
+    }
+
 //    @Override
-//    public List findByDayBetweenAndDay(LocalDate firstDay, LocalDate secondDay) {
-//        return signRepository.findByDayBetweenAndDay(firstDay, secondDay);
+//    public List<Sign> findByDayTrueAndIn_timeIsTrueAndUserInSign(LocalDate date, LocalTime inTime, User user) {
+//        return signRepository.findByDayTrueAndIn_timeIsTrueAndUserInSign(date, inTime, user);
 //    }
 }

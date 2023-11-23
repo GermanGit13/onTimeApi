@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 /** 1) Son los métodos que conectan con la BBDD
@@ -25,10 +26,12 @@ public interface SignRepository extends CrudRepository<Sign, Long> {
 
     List<Sign> findAll();
     List<Sign> findByDay(LocalDate day);
+    List<Sign> findByUserInSign_Name(String name);
     List<Sign> findAllByUserInSign_Department(String userInSign_department);
     List<Sign> findAllByUserInSign_DepartmentAndDay(String userInSign_department, LocalDate day);
     List<Sign> findByUserInSign(User user);
     List<Sign> findByUserInSignAndDay(User user, LocalDate day);
-
-//    List<Sign> findByDayBetweenAndDay(LocalDate firstDay, LocalDate secondDay);
+    List<Sign> findByDayBetween(LocalDate firstDay, LocalDate secondDay);
+    List<Sign> findByUserInSign_NameContains(String name);
+//    List<Sign> findByDayTrueAndIn_timeIsTrueAndUserInSign(LocalDate date, LocalTime inTime, User user);
 }

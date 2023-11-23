@@ -19,6 +19,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +53,13 @@ public class SignController {
     @PostMapping("/users/{userId}/signs")
     @Validated
     public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, @RequestBody Sign sign) throws UserNotFoundException {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
+        sign.setDay(LocalDate.now());
         System.out.println("Usuario registra fichaje: " + userId );
         System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
         System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidende_out());
+
         logger.debug(LITERAL_BEGIN_ADD + SIGN);
         Sign newSign = signService.addSign(sign, userId);
         return new ResponseEntity<>(newSign, HttpStatus.CREATED);
@@ -95,7 +101,9 @@ public class SignController {
      */
     @GetMapping("/signs")
     public ResponseEntity<Object> getSigns(@RequestParam(name = "userInSign_department", defaultValue = "", required = false) String department,
-                                           @RequestParam(name = "day", defaultValue = "", required = false) String day) {
+                                           @RequestParam(name = "day", defaultValue = "", required = false) String day,
+                                           @RequestParam(name = "name", defaultValue = "", required = false) String name,
+                                           @RequestParam(name = "secondDay", defaultValue = "", required = false) String secondDay) {
         System.out.println("List Signs All Signs ");
 
         if (!department.equals("") && day.equals("")) {
@@ -105,19 +113,36 @@ public class SignController {
             return  ResponseEntity.ok(signs);
         }
 
-        if (department.equals("") && !day.equals("")) {
+        if (department.equals("") && secondDay.equals("") && !day.equals("")) {
             System.out.println("List Signs by Day: " + day);
-            LocalDate date = LocalDate.parse(day);
+            LocalDate firstDate = LocalDate.parse(day);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDay(date);
+            List<Sign> signs = signService.findByDay(firstDate);
             return ResponseEntity.ok(signs);
         }
 
         if (!department.equals("") && !day.equals("")) {
             System.out.println("List Signs by department and Day: " + department + " / " + day);
-            LocalDate date = LocalDate.parse(day);
+            LocalDate firstDate = LocalDate.parse(day);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDay(department, date);
+            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDay(department, firstDate);
+            return ResponseEntity.ok(signs);
+        }
+
+        if (!name.equals("") && department.equals("") && day.equals("")) {
+            System.out.println("List Signs by name: " + name);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+//            List<Sign> signs = signService.findByUserInSign_Name(name);
+            List<Sign> signs = signService.findByUserInSign_NameContains(name);
+            return ResponseEntity.ok(signs);
+        }
+
+        if (name.equals("") && department.equals("") && !day.equals("") && !secondDay.equals("")) {
+            LocalDate firstDate = LocalDate.parse(day);
+            LocalDate secondDate = LocalDate.parse(secondDay);
+            System.out.println("List Signs Between: " + firstDate + " / " + secondDate);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findByDayBetween(firstDate, secondDate);
             return ResponseEntity.ok(signs);
         }
 
