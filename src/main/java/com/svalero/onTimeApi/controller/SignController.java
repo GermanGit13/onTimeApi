@@ -106,14 +106,10 @@ public class SignController {
                                            @RequestParam(name = "secondDay", defaultValue = "", required = false) String secondDay) {
         System.out.println("List Signs All Signs ");
 
-        if (!department.equals("") && day.equals("")) {
-            System.out.println("List Signs by department: " + department);
-            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDepartment(department);
-            return  ResponseEntity.ok(signs);
-        }
-
-        if (department.equals("") && secondDay.equals("") && !day.equals("")) {
+        /**
+         * Buscar todos los fichajes en un día
+         */
+        if (department.equals("") && secondDay.equals("") && !day.equals("") && !name.equals("")) {
             System.out.println("List Signs by Day: " + day);
             LocalDate firstDate = LocalDate.parse(day);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
@@ -121,15 +117,22 @@ public class SignController {
             return ResponseEntity.ok(signs);
         }
 
-        if (!department.equals("") && !day.equals("")) {
-            System.out.println("List Signs by department and Day: " + department + " / " + day);
+        /**
+         * Buscar todos los fichajes entre fechas
+         */
+        if (name.equals("") && department.equals("") && !day.equals("") && !secondDay.equals("")) {
             LocalDate firstDate = LocalDate.parse(day);
+            LocalDate secondDate = LocalDate.parse(secondDay);
+            System.out.println("List Signs Between: " + firstDate + " / " + secondDate);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDay(department, firstDate);
+            List<Sign> signs = signService.findByDayBetween(firstDate, secondDate);
             return ResponseEntity.ok(signs);
         }
 
-        if (!name.equals("") && department.equals("") && day.equals("")) {
+        /**
+         * Buscar todos los fichajes por letra en el nombre
+         */
+        if (!name.equals("") && department.equals("") && day.equals("") && secondDay.equals("")) {
             System.out.println("List Signs by name: " + name);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
 //            List<Sign> signs = signService.findByUserInSign_Name(name);
@@ -137,12 +140,68 @@ public class SignController {
             return ResponseEntity.ok(signs);
         }
 
-        if (name.equals("") && department.equals("") && !day.equals("") && !secondDay.equals("")) {
+        /**
+         * Buscar todos los fichajes en un día y letra en el nombre
+         */
+        if(!day.equals("") && !name.equals("") && department.equals("") && secondDay.equals("")) {
+            LocalDate firstDate = LocalDate.parse(day);
+            System.out.println("List Signs by Day: " + day + " / " + name);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findByDayAndUserInSign_NameContains(firstDate, name);
+            return ResponseEntity.ok(signs);
+        }
+
+        /**
+         * Buscar todos los fichajes de un departamento
+         */
+        if (!department.equals("") && day.equals("") && secondDay.equals("") && name.equals("") ) {
+            System.out.println("List Signs by department: " + department);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findByDepartment(department);
+            return  ResponseEntity.ok(signs);
+        }
+
+        /**
+         * Buscar todos los fichajes de un departamento y día
+         */
+        if (!department.equals("") && !day.equals("") && secondDay.equals("") && name.equals("")) {
+            System.out.println("List Signs by department and Day: " + department + " / " + day);
+            LocalDate firstDate = LocalDate.parse(day);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDay(department, firstDate);
+            return ResponseEntity.ok(signs);
+        }
+
+        /**
+         * Buscar todos los fichajes de un departamento, día y name
+         */
+        if (!department.equals("") && !day.equals("") && !name.equals("") && secondDay.equals("")) {
+            System.out.println("List Signs by department and Day: " + department + " / " + day + " / " + name);
+            LocalDate firstDate = LocalDate.parse(day);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayAndUserInSign_NameContains(department, firstDate, name);
+            return ResponseEntity.ok(signs);
+        }
+
+        /**
+         * Buscar todos los fichajes de un departamento y name
+         */
+        if (!department.equals("") && !name.equals("") && day.equals("") && secondDay.equals("")) {
+            System.out.println("List Signs by department and Day: " + department + " / " + name);
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndUserInSign_NameContains(department, name);
+            return ResponseEntity.ok(signs);
+        }
+
+        /**
+         * Buscar todos los fichajes de un departamento entre fechas
+         */
+        if (!day.equals("") && !secondDay.equals("") && !department.equals("") && name.equals("")) {
             LocalDate firstDate = LocalDate.parse(day);
             LocalDate secondDate = LocalDate.parse(secondDay);
-            System.out.println("List Signs Between: " + firstDate + " / " + secondDate);
+            System.out.println("List Signs by department between: " + firstDate + " / " + secondDate);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDayBetween(firstDate, secondDate);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayBetween(department, firstDate, secondDate);
             return ResponseEntity.ok(signs);
         }
 
@@ -168,9 +227,13 @@ public class SignController {
 
     @GetMapping("/users/{userId}/signs")
     public ResponseEntity<Object> findByUserInSign(@PathVariable String userId,
-                                                   @RequestParam(name = "day", defaultValue = "", required = false) String day) throws UserNotFoundException {
+                                                   @RequestParam(name = "day", defaultValue = "", required = false) String day,
+                                                   @RequestParam(name = "secondDay", defaultValue = "", required = false) String seconDay) throws UserNotFoundException {
 
-        if (!userId.equals("") && day.equals("")) {
+        /**
+         * Buscar todos los fichajes de un usuario
+         */
+        if (!userId.equals("") && day.equals("") && seconDay.equals("")) {
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
             long userIdNew = Long.parseLong(userId);
             User user = userService.findById(userIdNew);
@@ -181,16 +244,38 @@ public class SignController {
             return ResponseEntity.ok(signs);
         }
 
-        if (!userId.equals("") && !day.equals("")) {
+        /**
+         * Buscar todos los fichajes de un usuario y fecha
+         */
+        if (!userId.equals("") && !day.equals("") && seconDay.equals("")) {
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
             long userIdNew = Long.parseLong(userId);
             User user = userService.findById(userIdNew);
-            LocalDate date = LocalDate.parse(day);
+            LocalDate firstDay = LocalDate.parse(day);
             System.out.println("List Signs by User and Day: " + user.getUsername() + " / " + day);
-            List<Sign> signs = signService.findByUserInSignAndDay(user, date);
+            List<Sign> signs = signService.findByUserInSignAndDay(user, firstDay);
 
             return  ResponseEntity.ok(signs);
         }
+
+        /**
+         * Buscar todos los fichajes de un usuario y fecha
+         */
+        if (!userId.equals("") && !day.equals("") && !seconDay.equals("")) {
+            logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
+            long userIdNew = Long.parseLong(userId);
+            User user = userService.findById(userIdNew);
+            LocalDate firstDay = LocalDate.parse(day);
+            LocalDate secondDay = LocalDate.parse(seconDay);
+            System.out.println("List Signs by User between date: " + user.getUsername() + " / " + firstDay + " / " + seconDay);
+            List<Sign> signs = signService.findByUserInSignAndDayBetween(user, firstDay, secondDay);
+
+            return  ResponseEntity.ok(signs);
+        }
+
+        /**
+         * Buscar todos los fichajes de un usuario entre fechas
+         */
 
         return null;
     }

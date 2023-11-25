@@ -141,8 +141,11 @@ public class UserController {
                                            @RequestParam (name = "pass", defaultValue = "") String pass) throws UserNotFoundException {
 
             logger.debug(LITERAL_BEGIN_LISTALL + USER);
-
             User user = userService.findUserByUsername(username);
+            if (user == null) {
+                return ResponseEntity.notFound().build();
+            }
+
             System.out.println("Datos que recibo: " + username + " / " + pass);
             System.out.println("Datos despues de buscar el usuario por username : " + user.getUsername() + " / " + user.getPass());
             if (user.getUsername() != null && passwordEncoder.matches(pass, user.getPass())) {
