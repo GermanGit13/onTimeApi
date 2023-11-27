@@ -118,6 +118,11 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
+    public List<Sign> findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContains(String userInSign_department, LocalDate firstDay, LocalDate secondDay, String name) {
+        return signRepository.findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContains(userInSign_department, firstDay, secondDay, name);
+    }
+
+    @Override
     public List<Sign> findByUserInSign_Name(String name) {
         return signRepository.findByUserInSign_Name(name);
     }
@@ -135,6 +140,11 @@ public class SignServiceImpl implements SignService {
     @Override
     public List<Sign> findByDayAndUserInSign_NameContains(LocalDate day, String name) {
         return signRepository.findByDayAndUserInSign_NameContains(day, name);
+    }
+
+    @Override
+    public List<Sign> findByDayBetweenAndUserInSign_NameContains(LocalDate firstDay, LocalDate secondDay, String name) {
+        return signRepository.findByDayBetweenAndUserInSign_NameContains(firstDay, secondDay, name);
     }
 
 //    @Override

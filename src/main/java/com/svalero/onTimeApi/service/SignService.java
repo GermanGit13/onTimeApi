@@ -25,6 +25,7 @@ public interface SignService {
     List<Sign> findByUserInSign_Name(String name);
     List<Sign> findByUserInSign_NameContains(String name);
     List<Sign> findByDayAndUserInSign_NameContains(LocalDate day, String name);
+    List<Sign> findByDayBetweenAndUserInSign_NameContains(LocalDate firstDay, LocalDate secondDay, String name);
 
     List<Sign> findByDepartment(String userInSign_department);
     List<Sign> findAllByUserInSign_DepartmentAndDay(String userInSign_department, LocalDate day);
@@ -36,5 +37,6 @@ public interface SignService {
     List<Sign> findByUserInSign(User user);
     List<Sign> findByUserInSignAndDay(User user, LocalDate day);
     List<Sign> findByUserInSignAndDayBetween(User user, LocalDate firstDay, LocalDate seconDay);
+    List<Sign> findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContains(String userInSign_department, LocalDate firstDay, LocalDate secondDay, String name);
 //    List<Sign> findByDayTrueAndIn_timeIsTrueAndUserInSign(LocalDate date, LocalTime inTime, User user);
 }

@@ -21,5 +21,4 @@ public interface UserService {
     User findById(long id) throws UserNotFoundException;
     User findUserByUsernameAndPass(String username, String pass) throws  UserNotFoundException;
     User findUserByUsername(String username) throws UserNotFoundException;
-
 }

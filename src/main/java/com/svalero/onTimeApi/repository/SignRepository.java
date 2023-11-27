@@ -34,6 +34,7 @@ public interface SignRepository extends CrudRepository<Sign, Long> {
     List<Sign> findByUserInSign_Name(String name);
     List<Sign> findByUserInSign_NameContains(String name);
     List<Sign> findByDayAndUserInSign_NameContains(LocalDate day, String name);
+    List<Sign> findByDayBetweenAndUserInSign_NameContains(LocalDate firstDay, LocalDate secondDay, String name);
 
     /**
      * Busquedas listando todos los usuarios por DEPARTAMENTO como referencia principal
@@ -43,6 +44,7 @@ public interface SignRepository extends CrudRepository<Sign, Long> {
     List<Sign> findByUserInSign_DepartmentAndDayAndUserInSign_NameContains(String userInSign_department, LocalDate day, String name);
     List<Sign> findByUserInSign_DepartmentAndUserInSign_NameContains(String userInSign_department, String name);
     List<Sign> findByUserInSign_DepartmentAndDayBetween(String userInSign_department, LocalDate firstDay, LocalDate secondDay);
+    List<Sign> findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContains(String userInSign_department, LocalDate firstDay, LocalDate secondDay, String name);
 
     /**
      * Busquedas listando por USUARIO como referencia principal
