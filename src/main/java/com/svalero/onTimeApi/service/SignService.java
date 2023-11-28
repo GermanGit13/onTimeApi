@@ -3,6 +3,8 @@ package com.svalero.onTimeApi.service;
 
 import com.svalero.onTimeApi.domain.Sign;
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.domain.dto.SignOutDto;
+import com.svalero.onTimeApi.domain.dto.UserPassDto;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import jakarta.persistence.RollbackException;
@@ -17,6 +19,7 @@ import java.util.List;
 public interface SignService {
 
     Sign addSign (Sign sign, long userId) throws UserNotFoundException;
+    SignOutDto signOut(long id, SignOutDto signOutDto) throws SignNotFoundException;
     void deleteSign (long id) throws SignNotFoundException;
     Sign modifySign(long idSign, long idUser, Sign newSign) throws SignNotFoundException, UserNotFoundException, RollbackException;
     List<Sign> findAll();

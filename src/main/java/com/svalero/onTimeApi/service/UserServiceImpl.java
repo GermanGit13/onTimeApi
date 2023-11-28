@@ -1,6 +1,7 @@
 package com.svalero.onTimeApi.service;
 
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.domain.dto.UserPassDto;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import com.svalero.onTimeApi.repository.UserRepository;
@@ -84,5 +85,24 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findUserByUsername(String username) throws UserNotFoundException {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public UserPassDto modifyPass(long idUser, UserPassDto userPassDto) throws UserNotFoundException {
+        User existingUser = userRepository.findById(idUser)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!passwordEncoder.matches(userPassDto.getPass(), existingUser.getPass())) {
+            String plainPassword = userPassDto.getPass();
+            String hashsedPassword = passwordEncoder.encode(plainPassword);
+            userPassDto.setPass(hashsedPassword);
+        } else {
+            userPassDto.setPass(existingUser.getPass());
+        }
+
+        modelMapper.map(userPassDto, existingUser);
+        userRepository.save(existingUser);
+
+        return userPassDto;
     }
 }

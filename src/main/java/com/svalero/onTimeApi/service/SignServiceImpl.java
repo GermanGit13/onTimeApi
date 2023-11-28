@@ -2,6 +2,8 @@ package com.svalero.onTimeApi.service;
 
 import com.svalero.onTimeApi.domain.Sign;
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.domain.dto.SignOutDto;
+import com.svalero.onTimeApi.domain.dto.UserPassDto;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import com.svalero.onTimeApi.repository.SignRepository;
@@ -35,6 +37,17 @@ public class SignServiceImpl implements SignService {
         sign.setUserInSign(user);
 
         return signRepository.save(sign);
+    }
+
+    @Override
+    public SignOutDto signOut(long id, SignOutDto signOutDto) throws SignNotFoundException {
+        Sign sign = signRepository.findById(id)
+                .orElseThrow(SignNotFoundException::new);
+
+        modelMapper.map(signOutDto, sign);
+        signRepository.save(sign);
+
+        return signOutDto;
     }
 
     @Override

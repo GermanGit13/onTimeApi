@@ -1,6 +1,7 @@
 package com.svalero.onTimeApi.controller;
 
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.domain.dto.UserPassDto;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
@@ -54,6 +55,21 @@ public class UserController {
         User newUser = userService.addUser(user);
         logger.debug(LITERAL_END_ADD + USER);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    /**
+     * Actualizar la contraseña
+     * @param id del user a realizar el PAth
+     * @param userPassDto objeto user en modo DTO con solo el campo pass
+     * @return
+     * @throws UserNotFoundException
+     */
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<UserPassDto> modifyPassword(@PathVariable long id, @Valid @RequestBody UserPassDto userPassDto) throws UserNotFoundException {
+        logger.debug(LITERAL_BEGIN_UPDATE + USER);
+        userService.modifyPass(id, userPassDto);
+
+        return ResponseEntity.noContent().build();
     }
 
     /**

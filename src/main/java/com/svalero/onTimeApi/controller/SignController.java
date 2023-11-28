@@ -2,6 +2,8 @@ package com.svalero.onTimeApi.controller;
 
 import com.svalero.onTimeApi.domain.Sign;
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.domain.dto.SignOutDto;
+import com.svalero.onTimeApi.domain.dto.UserPassDto;
 import com.svalero.onTimeApi.exception.ErrorMessage;
 import com.svalero.onTimeApi.exception.SignNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
@@ -63,6 +65,17 @@ public class SignController {
         logger.debug(LITERAL_BEGIN_ADD + SIGN);
         Sign newSign = signService.addSign(sign, userId);
         return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/signs/{id}")
+    public ResponseEntity<SignOutDto> signOut(@PathVariable long id, @Valid @RequestBody SignOutDto signOutDto) throws SignNotFoundException{
+        logger.debug(LITERAL_BEGIN_SIGNOUT + SIGN);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        signOutDto.setOut_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
+
+        signService.signOut(id, signOutDto);
+        return new ResponseEntity<>(signOutDto, HttpStatus.CREATED);
     }
 
     /**

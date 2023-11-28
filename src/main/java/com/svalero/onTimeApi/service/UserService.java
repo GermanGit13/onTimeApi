@@ -1,6 +1,7 @@
 package com.svalero.onTimeApi.service;
 
 import com.svalero.onTimeApi.domain.User;
+import com.svalero.onTimeApi.domain.dto.UserPassDto;
 import com.svalero.onTimeApi.exception.DepartmentNotFoundException;
 import com.svalero.onTimeApi.exception.UserNotFoundException;
 import jakarta.persistence.RollbackException;
@@ -21,4 +22,5 @@ public interface UserService {
     User findById(long id) throws UserNotFoundException;
     User findUserByUsernameAndPass(String username, String pass) throws  UserNotFoundException;
     User findUserByUsername(String username) throws UserNotFoundException;
+    UserPassDto modifyPass(long idUser, UserPassDto userPassDto) throws UserNotFoundException;
 }

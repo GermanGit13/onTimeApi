@@ -26,6 +26,8 @@ public class Literal {
     public static final String LITERAL_BEGIN_ADD = "Begin add";
     public static final String LITERAL_END_ADD = "End add";
     public static final String LITERAL_BEGIN_MODIFY = "Begin modify";
+    public static final String LITERAL_BEGIN_UPDATE = "Begin update";
+    public static final String LITERAL_BEGIN_SIGNOUT = "Begin sign out";
     public static final String LITERAL_END_MODIFY = "End modify";
     public static final String LITERAL_BEGIN_DELETE = "Begin delete";
     public static final String LITERAL_END_DELETE = "End delete";
