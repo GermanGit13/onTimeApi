@@ -31,7 +31,7 @@ public class User {
     @Size(min = 6)
     private String pass;
 
-    @Column(columnDefinition = ROL_DEFAULT)
+//    @Column(columnDefinition = ROL_DEFAULT)
     @NotNull(message = LITERAL_NOT_NULL)
     private String rol;
 

@@ -55,16 +55,26 @@ public class SignController {
     @PostMapping("/users/{userId}/signs")
     @Validated
     public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, @RequestBody Sign sign) throws UserNotFoundException {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
-        sign.setDay(LocalDate.now());
-        System.out.println("Usuario registra fichaje: " + userId );
-        System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
-        System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidende_out());
 
-        logger.debug(LITERAL_BEGIN_ADD + SIGN);
-        Sign newSign = signService.addSign(sign, userId);
-        return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+        /**
+         * Para poder fichar dias anteriores o crear un fichaje en el dia
+         */
+        if (!sign.getDay().equals("") && !sign.getIn_time().equals("") && !sign.getOut_time().equals("")){
+            logger.debug(LITERAL_BEGIN_ADD + SIGN);
+            Sign newSign = signService.addSign(sign, userId);
+            return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+        } else {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
+            sign.setDay(LocalDate.now());
+            System.out.println("Usuario registra fichaje: " + userId );
+            System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
+            System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidende_out());
+
+            logger.debug(LITERAL_BEGIN_ADD + SIGN);
+            Sign newSign = signService.addSign(sign, userId);
+            return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+        }
     }
 
     @PatchMapping("/signs/{id}")

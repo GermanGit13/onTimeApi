@@ -11,6 +11,7 @@
 	<groupId>com.svalero</groupId>
 	<artifactId>onTimeApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>onTimeApi</name>
 	<description>Program Schedule Control</description>
 
@@ -97,6 +98,15 @@
 		</dependency>
 		<!-- FIN Libreria para mapear campos entre objetos -->
 
+		<!-- Dependencia SpringBoot para comunicarse con goolge cloud y securizar la conexion -->
+<!--				<dependency>-->
+<!--					<groupId>com.google.cloud</groupId>-->
+<!--					<artifactId>spring-cloud-gcp-dependencies</artifactId>-->
+<!--					<version>4.8.4</version>-->
+<!--					<type>pom</type>-->
+<!--					<scope>import</scope>-->
+<!--				</dependency>-->
+		<!-- Fin Dependencia SpringBoot para comunicarse con goolge cloud y securizar la conexion -->
 	</dependencies>
 
 	<build>
@@ -104,6 +114,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.7.6</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -114,28 +125,28 @@
 				</configuration>
 			</plugin>
 
-			<!-- Para que funcione esta mierda -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>toolchain</goal>
-						</goals>
-						<configuration>
-							<toolchains>
-								<jdk>
-									<!-- Version de Java a usar -->
-									<version>17</version>
-								</jdk>
-							</toolchains>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- Fin Para que funcione esta mierda -->
+<!--			&lt;!&ndash; Para que funcione esta mierda &ndash;&gt;-->
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-toolchains-plugin</artifactId>-->
+<!--				<version>3.0.0</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<goals>-->
+<!--							<goal>toolchain</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<toolchains>-->
+<!--								<jdk>-->
+<!--									&lt;!&ndash; Version de Java a usar &ndash;&gt;-->
+<!--									<version>17</version>-->
+<!--								</jdk>-->
+<!--							</toolchains>-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
+<!--			&lt;!&ndash; Fin Para que funcione esta mierda &ndash;&gt;-->
 		</plugins>
 	</build>
 
