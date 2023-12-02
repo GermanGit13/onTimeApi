@@ -65,7 +65,7 @@ public class SignController {
             sign.setDay(LocalDate.now());
             System.out.println("Usuario registra fichaje: " + userId );
             System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
-            System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidende_out());
+            System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_out());
 
             logger.debug(LITERAL_BEGIN_ADD + SIGN);
             Sign newSign = signService.addSign(sign, userId);
