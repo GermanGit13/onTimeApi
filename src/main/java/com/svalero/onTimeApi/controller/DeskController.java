@@ -81,7 +81,7 @@ public class DeskController {
      * @RequestParam: Son las QueryParam se usa para poder hacer filtrados en las busquedas "Where"
      */
     @GetMapping("/desks")
-    public ResponseEntity<Object> getDesk() {
+    public ResponseEntity<Object> getDesks() {
         logger.debug(LITERAL_END_LISTALL + DESK);
         List<Desk> desks = deskService.findAll();
         logger.debug(LITERAL_END_LISTALL + DESK);

@@ -1,0 +1,779 @@
+openapi: 3.0.1
+#Dentro de la web Swagger buscar basic structure -> guía a seguir para crear la semilla
+#El tabulado es el que marca el inicio y el fin del cada parte del código
+#Muy importante tabular bien.
+#https://editor.swagger.io/
+#https://swagger.io/docs/specification/2-0/basic-structure/
+
+info:
+  description: |-
+    API para la gestión del control de presencia de una empresa.
+    
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+
+  title: onTime API
+  contact:
+    name: Germán Rodríguez Serrano
+    email: a26318@svalero.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1.0"
+
+# tags -> Para catalogar los endpoint de la API
+servers:
+  - url: https://localhost:8080 #URL basic de la Api, la que todas las URL van a tener
+    description: onTimeApi
+
+tags:
+  - name: User
+    description: Operaciones sobre los Usuarios
+  - name: Sign
+    description: Operaciones sobre los Fichajes
+  - name: Desk
+    description: Operaciones sobre los Puestos de Trabajo
+  - name: Booking
+    description: Operaciones sobre la reserva de puestos de trabajo
+
+paths: # Rutas operaciones que tenemos por cada path Ej: /users
+  # operaciones sobre /users
+  /users:
+    post:
+      tags:
+        - User
+      # sumary: Alta de Usuarios
+      description: Registro de un nuevo usuario para poder usar la aplicación
+      operationId: addUser # Id de operación tiene que ser único Ej: getUserByPlayer getALl getById
+      requestBody: # Para indicarle que lleva un cuerpo de entrada para dar de alta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIn'
+      responses:
+        '201':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - User
+        # - Lines #Ejemplo no es bueno que este duplicado pero podría ir en ambos path
+      summary: Listado de Usuarios
+      description: Obtiene la información de todos los usuarios del sistema.
+      operationId: getUsers
+#      parameters:
+#        - $ref: '#/components/parameters/Name'
+#        - $ref: '#/components/parameters/Rol'
+      responses:
+        '200':
+          description: Se devuelve el listado de usuarios correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  #Usamos la ruta schemas para que cargue el schema. Se consulta en Structure->Compoments
+                  #nos ahorramos código, es como llamar a un método
+                  $ref: '#/components/schemas/User'
+        '500':
+          #Usamos la ruta responses para que cargue la definión común para este tipo de respuesta
+          #nos ahorramos código, es como llamar a un método
+          $ref: '#/components/responses/InternalServerError'
+
+  '/users/{id}':
+    parameters:
+      #Marcamos la referencia a /components/parameters/UserId donde hemos definido los datos y así podemos reutilizarlos
+      #Para los que usen el Path  /users/{userId} aplica el $ref así ahorramos código repetido
+      - $ref: '#/components/parameters/UserId'
+
+    delete:
+      tags:
+        - User
+      summary: Dar de baja un usuario
+      description: Operación de borrado de usuarios por id
+      operationId: deleteUser
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - User
+      summary: Modificación de usuario
+      description: Modificiación de un usuario por id
+      operationId: modifyUser
+      requestBody:
+        description: Los datos para modificar un usuario existente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPut'
+      responses:
+        '201':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - User
+      summary: Consulta de usuario por Id
+      description: Consulta de usuario por su identificador único
+      operationId: getUser
+      responses:
+        '200':
+          description: Se devuelve la información de un usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  '/users/department/{department}':
+    parameters:
+      #Marcamos la referencia a /components/parameters/UserId donde hemos definido los datos y así podemos reutilizarlos
+      #Para los que usen el Path  /users/{userId} aplica el $ref así ahorramos código repetido
+      - $ref: '#/components/parameters/Department'
+
+    get:
+      tags:
+        - User
+      summary: Búsqueda por Department
+      description: Operación de buscar todos los  usuarios de un departamento departamento
+      operationId: getUserByDepartment
+      responses:
+        '200':
+          description: Se devuelve la información de los usuarios que pertenecen al departamento
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  '/users/login':
+    parameters:
+      #Marcamos la referencia a /components/parameters/UserId donde hemos definido los datos y así podemos reutilizarlos
+      #Para los que usen el Path  /users/{userId} aplica el $ref así ahorramos código repetido
+      - $ref: '#/components/parameters/Username'
+      - $ref: '#/components/parameters/Pass'
+
+    get:
+      tags:
+        - User
+      summary: Verificación de usuario y contraseña correctos para el login.
+      description: Operación de login mediante comprobación de username y pass correctos
+      operationId: getLogin
+      responses:
+        '200':
+          description: Se devuelve la información del usuario.
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /desks:
+    post:
+      tags:
+        - Desk
+      # sumary: Alta de Escritorios
+      description: Registro de un nuevo escritorio, estando disponible para su reserva por los usuarios
+      operationId: addDesk # Id de operación tiene que ser único Ej: getUserByPlayer getALl getById
+      requestBody: # Para indicarle que lleva un cuerpo de entrada para dar de alta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeskIn'
+      responses:
+        '201':
+          description: Desk creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desk'
+        '400':
+          $ref: '#/components/responses/BadRequestDesk'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Desk
+        # - Lines #Ejemplo no es bueno que este duplicado pero podría ir en ambos path
+      summary: Listado de Escritorios
+      description: Obtiene la información de todos los escritorios del sistema.
+      operationId: getDesks
+      #      parameters:
+      #        - $ref: '#/components/parameters/Name'
+      #        - $ref: '#/components/parameters/Rol'
+      responses:
+        '200':
+          description: Se devuelve el listado de los escritorios correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  #Usamos la ruta schemas para que cargue el schema. Se consulta en Structure->Compoments
+                  #nos ahorramos código, es como llamar a un método
+                  $ref: '#/components/schemas/Desk'
+        '500':
+          #Usamos la ruta responses para que cargue la definión común para este tipo de respuesta
+          #nos ahorramos código, es como llamar a un método
+          $ref: '#/components/responses/InternalServerError'
+
+  '/desks/{id}':
+    parameters:
+      #Marcamos la referencia a /components/parameters/UserId donde hemos definido los datos y así podemos reutilizarlos
+      #Para los que usen el Path  /users/{userId} aplica el $ref así ahorramos código repetido
+      - $ref: '#/components/parameters/DeskId'
+
+    delete:
+      tags:
+        - Desk
+      summary: Dar de baja un escritorio
+      description: Operación de borrado de escritorios por id
+      operationId: deleteDesk
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - Desk
+      summary: Modificación de un escritorio
+      description: Modificiación de un escritorio por id
+      operationId: modifyDesk
+      requestBody:
+        description: Los datos para modificar un escritorio existente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeskPut'
+      responses:
+        '201':
+          description: Escritorio creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desk'
+        '400':
+          $ref: '#/components/responses/BadRequestDesk'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Desk
+      summary: Consulta de un escritorio por Id
+      description: Consulta de un escritorio por su identificador único
+      operationId: getDesk
+      responses:
+        '200':
+          description: Se devuelve la información de un escritorio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desk'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  #Podemos crear components para reutilizarlps como contenido dentro de las respuestas
+  #Panel izquierdo -> Structure -> Components -> Components
+components:
+  schemas:
+    UserIn:
+      type: object
+      properties:
+        username:
+          type: string
+          format: string
+          description: Nombre de usuario, se realiza validaciones para que no sea null y único.
+          example: grs
+        pass:
+          type: string
+          format: string
+          description: Contraseña de usuario, se realiza validaciones para que no sea null, longuitud mínima de carácteres 6. La contraseña es encriptida.
+          example: Acces0@Dat0S
+        rol:
+          type: string
+          format: string
+          description: Rol del usuario, se realiza validaciones para que no sea null.
+          example: USER
+        department:
+          type: string
+          format: string
+          description: Departamento al que pertenece el usuario
+          example: Informática
+        name:
+          type: string
+          format: string
+          description: Nombre del usuario que se da de alta para usar la aplicación
+          example: Germán
+        surname:
+          type: string
+          format: string
+          description: Apellidos del usuario que se da de alta para usar la aplicación
+          example: Rodríguez Serrano
+        mail:
+          type: string
+          format: string
+          description: Correo del usuario que se da de alta para usar la aplicación, lleva validaciones tipo mail.
+          example: Rodríguez Serrano
+        address:
+          type: string
+          format: string
+          description: Direccion del usuario que se registra
+          example: Calle Trole, 9
+        phone:
+          type: string
+          format: string
+          description: Número de teléfono que se da de alta para usar la aplicación,, se realiza validaciones de longuitud mínima de carácteres 9
+          example: 666 66 66 66
+
+    User:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: number
+              format: long
+              description: Id autonúmerico como clave primaria de la BBDD
+              example: 13
+        - $ref: '#/components/schemas/UserIn'
+        - $ref: '#/components/schemas/UserPut'
+
+    UserPut:
+      allOf:
+        - type: object
+          properties:
+            pass:
+              type: string
+              format: string
+              description: Cambio de contraseña por parte del usuario
+              example: C0ntr@s3ñ@N3w
+        - $ref: '#/components/schemas/UserIn'
+
+    DeskIn:
+      type: object
+      properties:
+        floor:
+          type: number
+          format: number
+          description: Planta donde se encuentra el escritorio, se realiza validaciones para que no sea nulo.
+          example: 2
+        desk:
+          type: boolean
+          format: boolean
+          description: Campo asignado para saber si es un escritorio.
+          example: true
+        meeting_room:
+          type: boolean
+          format: boolean
+          description: Campo asignado para saber si es una sala de reuniones.
+          example: false
+
+    Desk:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: number
+              format: long
+              description: Id autonúmerico como clave primaria de la BBDD
+              example: 1
+        - $ref: '#/components/schemas/DeskIn'
+        - $ref: '#/components/schemas/DeskPut'
+
+    DeskPut:
+      allOf:
+        - type: object
+          properties:
+            desk:
+              type: boolean
+              format: boolean
+              description: Cambiar que ya no es o sí un escritorio
+              example: false
+            meeting_room:
+              type: boolean
+              format: boolean
+              description: Cambiar que ya no es o sí una sala de reuniones
+              example: true
+        - $ref: '#/components/schemas/DeskIn'
+
+    BadRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: código de estado
+          example: 400
+        message:
+          type: string
+          description: Mensaje de error
+          example: Error de validación
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorField'
+
+    BadRequestDesk:
+      type: object
+      properties:
+        code:
+          type: string
+          description: código de estado
+          example: 400
+        message:
+          type: string
+          description: Mensaje de error
+          example: Error de validación
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorFieldDesk'
+
+    ErrorField:
+      type: object
+      description: Error de validación en un campo de entrada
+      properties:
+        fieldName:
+          type: string
+          description: El campo donde se ha producido el error
+          example: rol
+        message:
+          type: string
+          description: Mensaje de error asociado con el campo
+          example: El campo no puede estar el campo en blanco
+
+    ErrorFieldDesk:
+      type: object
+      description: Error de validación en un campo de entrada
+      properties:
+        fieldName:
+          type: int
+          description: El campo donde se ha producido el error
+          example: floor
+        message:
+          type: string
+          description: Mensaje de error asociado con el campo
+          example: El campo no puede estar el campo en blanco
+
+    NotFound:
+      type: object
+      description: Objeto no encontrado
+      properties:
+        code:
+          type: string
+          description: código de estado
+          example: 404
+        message:
+          type: string
+          description: Mensaje de error
+          example: Not found
+
+    InternalServerError:
+      type: object
+      description: Error Interno de la API
+      properties:
+        code:
+          type: string
+          description: Código de estado
+          example: 500
+        message:
+          type: string
+          description: Mensaje de error
+          example: Internal Server Error
+
+    #Podemos crear respuestas para reutilizarlas y no tener que estar escribiendo lo mismo constantemente
+    #Panel izquierdo -> Structure -> Components -> Responses
+  responses:
+    NoContent:
+      description: No Content
+
+    BadRequest:
+      description: Error de validación
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequest'
+
+    BadRequestDesk:
+      description: Error de validación
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestDesk'
+
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerError'
+
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      description: Identificador del Usuario
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 13
+    Username:
+      name: username
+      in: query #@RequestParam: no forma parte de la URL, se carga por "?" como opción, es un "WHERE".
+      description: Nombre de Usuario
+      required: true
+      schema:
+        type: string
+        format: string
+        example: GRS
+
+    Pass:
+      name: pass
+      in: query #@RequestParam: no forma parte de la URL, se carga por "?" como opción, es un "WHERE".
+      description: Contraseña del usuario
+      required: true
+      schema:
+        type: string
+        format: string
+        example: Acces0@Dat0S
+
+    Name:
+      name: name
+      in: query #@RequestParam: no forma parte de la URL, se carga por "?" como opción, es un "WHERE".
+      description: Filtrar por el nombre introducido
+      required: false
+      schema:
+        type: string
+        format: string
+        example: german
+    Department:
+      name: department
+      in: path
+      description: Filtrar por los usuarios que pertenecen a un determinado departamento
+      required: true
+      schema:
+        type: string
+        format: string
+        enum: [ USER, MANAGER, ADMIN ]
+        example: USER
+
+    DeskId:
+      name: deskId
+      in: path
+      description: Identificador del Escritorio
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 1
+
+    PlayerId:
+      name: playerId
+      in: path
+      description: Identificador de un jugador
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 13
+    UserInPlayer:
+      name: userInPlayer
+      in: query
+      description: Identificador de un jugador, cuando se filtra solo por este parámetro se devuelve listado ordenado por sexo
+      required: false
+      schema:
+        type: number
+        format: long
+        example: 13
+    Active:
+      name: active
+      in: query
+      description: Filtrar por los jugadores en activo del club, cuando se filtra solo por este parámetro se devuelve listado ordenado por sexo
+      required: false
+      schema:
+        type: boolean
+        format: boolean
+        enum: [ true, false ]
+        example: true
+    ActiveTeam:
+      name: active
+      in: query
+      description: Filtrar por los equipo en activo del club
+      required: false
+      schema:
+        type: boolean
+        format: boolean
+        enum: [ true, false ]
+        example: true
+    TeamId:
+      name: teamId
+      in: path
+      description: Identificador de un equipo
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 2
+    Category:
+      name: category
+      in: query
+      description: Filtrar por la categoria a la que pertenece un equipo
+      required: false
+      schema:
+        type: string
+        format: string
+        example: Benjamín
+    Competition:
+      name: competition
+      in: query
+      description: Filtrar por la competición a la que pertenece un equipo
+      required: false
+      schema:
+        type: string
+        format: string
+        example: Moratalaz
+    UserInTeam:
+      name: userInTeam
+      in: path
+      description: Identificador de un usuario que es entrenador
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 13
+    TeamInMatch:
+      name: teamInMatch
+      in: path
+      description: Identificador de un equipo que juega un partido
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 2
+    MatchId:
+      name: matchId
+      in: path
+      description: Identificador de un partido
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 2
+    TeamInMatchQuery:
+      name: teamInMatch
+      in: query
+      description: Identificador de un equipo que juega un partido
+      required: false
+      schema:
+        type: number
+        format: long
+        example: 2
+    DateMatch:
+      name: dateMatch
+      in: query
+      description: Fecha de un partido
+      required: false
+      schema:
+        type: dateLocal
+        format: dateLocal
+        example: 2023-01-05
+    HourMatch:
+      name: hourMatch
+      in: query
+      description: Hora de un partido
+      required: false
+      schema:
+        type: timeLocal
+        format: timeLocal
+        example: 22:00:00
+    ClothesId:
+      name: clothesId
+      in: path
+      description: Identificador de un pedido
+      required: true
+      schema:
+        type: number
+        format: long
+        example: 1
+    PlayerInClothesQuery:
+      name: playerInClothes
+      in: query
+      description: Identificador de un jugador del sistema
+      required: false
+      schema:
+        type: number
+        format: long
+        example: 13
+    SizeEquipment:
+      name: sizeEquipment
+      in: query
+      description: Talla de la equipación
+      required: false
+      schema:
+        type: string
+        format: string
+        example: XL
+    Dorsal:
+      name: dorsal
+      in: query
+      description: Dorsal de un jugador del sistema
+      required: false
+      schema:
+        type: number
+        format: int
+        example: 8
