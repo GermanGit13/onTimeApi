@@ -24,7 +24,7 @@ info:
 
 # tags -> Para catalogar los endpoint de la API
 servers:
-  - url: https://localhost:8080 #URL basic de la Api, la que todas las URL van a tener
+  - url: https://ontime-406612.ew.r.appspot.com/ #URL basic de la Api, la que todas las URL van a tener
     description: onTimeApi
 
 tags:
@@ -57,7 +57,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserPost'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -128,7 +128,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserPost'
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -149,6 +149,26 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - User
+      summary: Cambio de Contraseña para un usuario
+      operationId: modifyPassword
+      requestBody:
+        description: Uso de UserPassDto para cambiar la contraseña de un usuario , se devuelve encriptada
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPassDto'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -321,6 +341,293 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /bookings:
+    post:
+      tags:
+        - Booking
+      # sumary: Registro de Reservas de escritorios por parte de los usuarios
+      description: Reserva de un nuevo escritorio por parte de un usuario
+      operationId: addBooking # Id de operación tiene que ser único Ej: getUserByPlayer getALl getById
+      requestBody: # Para indicarle que lleva un cuerpo de entrada para dar de alta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingIn'
+      responses:
+        '201':
+          description: Booking creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          $ref: '#/components/responses/BadRequestDesk'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Booking
+      summary: Listado de Reservas
+      description: Obtiene la información de todas las reservas de escritorios del sistema
+      operationId: getBooking
+      #      parameters:
+      #        - $ref: '#/components/parameters/Name'
+      #        - $ref: '#/components/parameters/Rol'
+      responses:
+        '200':
+          description: Se devuelve el listado de las reservas correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  #Usamos la ruta schemas para que cargue el schema. Se consulta en Structure->Compoments
+                  #nos ahorramos código, es como llamar a un método
+                  $ref: '#/components/schemas/Booking'
+        '500':
+          #Usamos la ruta responses para que cargue la definión común para este tipo de respuesta
+          #nos ahorramos código, es como llamar a un método
+          $ref: '#/components/responses/InternalServerError'
+
+  '/bookings/{id}':
+    parameters:
+      #Marcamos la referencia a /components/parameters/UserId donde hemos definido los datos y así podemos reutilizarlos
+      #Para los que usen el Path  /users/{userId} aplica el $ref así ahorramos código repetido
+      - $ref: '#/components/parameters/BookingId'
+
+    delete:
+      tags:
+        - Booking
+      summary: Dar de baja una reserva
+      description: Operación de borrado de reservas por id
+      operationId: deleteBooking
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Booking
+      summary: Consulta de una reserva por Id
+      description: Consulta de una reserva por su identificador único
+      operationId: findById
+      responses:
+        '200':
+          description: Se devuelve la información de una reserva
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desk'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  '/bookings/{idBooking}/users/{idUser}/desks/{idDesk}':
+    parameters:
+      - $ref: '#/components/parameters/BookingId'
+      - $ref: '#/components/parameters/UserId'
+      - $ref: '#/components/parameters/DeskId'
+
+    put:
+      tags:
+        - Booking
+      summary: Modificación de una reserva
+      description: Modificación de una reserva
+      operationId: modifyBooking
+      requestBody:
+        description: Los datos nuevos de una reserva
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+      responses:
+        '201':
+          description: Reserva modificada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          $ref: '#/components/responses/BadRequestBooking'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  '/users/{userId}/signs':
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+
+    post:
+      tags:
+        - Sign
+      # sumary: Registro de fichajes
+      description: Registrar un nuevo fichaje en la aplicación.
+      operationId: addSign # Id de operación tiene que ser único Ej: getUserByPlayer getALl getById
+      requestBody: # Para indicarle que lleva un cuerpo de entrada para dar de alta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+      responses:
+        '201':
+          description: Fichaje creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sign'
+        '400':
+          $ref: '#/components/responses/BadRequestSign'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Sign
+      summary: Listado de fichajes de un usuario
+      description: Permite buscar los fichajes de un usuario en un día o entre fechas
+      operationId: findByUserInSign
+      parameters:
+        - $ref: '#/components/parameters/Day'
+        - $ref: '#/components/parameters/seconDay'
+      responses:
+        '200':
+          description: Se devuelve un listado con la información de los fichajes de un usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sign'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+  '/signs/{id}':
+    parameters:
+      #Marcamos la referencia a /components/parameters/UserId donde hemos definido los datos y así podemos reutilizarlos
+      #Para los que usen el Path  /users/{userId} aplica el $ref así ahorramos código repetido
+      - $ref: '#/components/parameters/SignId'
+
+    delete:
+      tags:
+        - Sign
+      summary: Borrar un fichaje
+      description: Operación de borrado de un fichaje por su id
+      operationId: deleteSign
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Sign
+      summary: Consulta de un fichaje por Id
+      description: Consulta de un fichaje por su identificador único
+      operationId: findById
+      parameters:
+        - $ref: '#/components/parameters/SignId'
+
+      responses:
+        '200':
+          description: Se devuelve la información de un fichaje
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sign'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Sign
+      summary: Registro de salida de un fichaje con entrada
+      operationId: signOut
+      requestBody:
+        description: Uso de SignOutDto para registrar una salida mediante un path de un fichaje con solo entrada
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignOutDto'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  '/signs/{idSign}/users/{idUser}':
+    parameters:
+     - $ref: '#/components/parameters/SignId'
+     - $ref: '#/components/parameters/UserId'
+
+    put:
+      tags:
+        - Sign
+      summary: Modificación de un fichaje
+      description: Modificiación de un fichaje por  su id y el id del usuario que lo realizao
+      operationId: modifySign
+      requestBody:
+        description: Los datos para modificar un fichaje existente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignPut'
+      responses:
+        '201':
+          description: Fichaje creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sign'
+        '400':
+          $ref: '#/components/responses/BadRequestSign'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /signs:
+    parameters:
+      - $ref: '#/components/parameters/Department'
+      - $ref: '#/components/parameters/Day'
+      - $ref: '#/components/parameters/Name'
+      - $ref: '#/components/parameters/seconDay'
+
+    get:
+      tags:
+        - Sign
+      summary: Listado de fichajes de todos los usuarios con filtros
+      description: Permite buscar los fichajes de un usuario en un día o entre fechas o departamento. Con la combianción de todas
+      operationId: getSigns
+      responses:
+        '200':
+          description: Se devuelve un listado con la información de los fichajes de un usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sign'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   #Podemos crear components para reutilizarlps como contenido dentro de las respuestas
   #Panel izquierdo -> Structure -> Components -> Components
 components:
@@ -384,7 +691,60 @@ components:
               description: Id autonúmerico como clave primaria de la BBDD
               example: 13
         - $ref: '#/components/schemas/UserIn'
-        - $ref: '#/components/schemas/UserPut'
+
+    UserPost:
+      type: object
+      properties:
+        id:
+          type: number
+          format: long
+          description: Id autonúmerico como clave primaria de la BBDD
+          example: 13
+        username:
+          type: string
+          format: string
+          description: Nombre de usuario, se realiza validaciones para que no sea null y único.
+          example: grs
+        pass:
+          type: string
+          format: string
+          description: Contraseña de usuario, se realiza validaciones para que no sea null, longuitud mínima de carácteres 6. La contraseña es encriptida.
+          example: $2a$10$0Eg3QedHTq7YQTFvKFCoAO00N41KtXbe7yDjlwSZMG3gqjxqJCIJ.
+        rol:
+          type: string
+          format: string
+          description: Rol del usuario, se realiza validaciones para que no sea null.
+          example: USER
+        department:
+          type: string
+          format: string
+          description: Departamento al que pertenece el usuario
+          example: Informática
+        name:
+          type: string
+          format: string
+          description: Nombre del usuario que se da de alta para usar la aplicación
+          example: Germán
+        surname:
+          type: string
+          format: string
+          description: Apellidos del usuario que se da de alta para usar la aplicación
+          example: Rodríguez Serrano
+        mail:
+          type: string
+          format: string
+          description: Correo del usuario que se da de alta para usar la aplicación, lleva validaciones tipo mail.
+          example: Rodríguez Serrano
+        address:
+          type: string
+          format: string
+          description: Direccion del usuario que se registra
+          example: Calle Trole, 9
+        phone:
+          type: string
+          format: string
+          description: Número de teléfono que se da de alta para usar la aplicación,, se realiza validaciones de longuitud mínima de carácteres 9
+          example: 666 66 66 66
 
     UserPut:
       allOf:
@@ -444,6 +804,138 @@ components:
               example: true
         - $ref: '#/components/schemas/DeskIn'
 
+    BookingIn:
+      type: object
+      properties:
+        day:
+          type: LocalDate
+          format: LocalDate
+          description: Fecha para la reserva del escritorio por parte del usuario.
+          example: 2023-11-22
+        in_booking:
+          type: LocalTime
+          format: LocalTime
+          description: Hora de inicio de la reserva.
+          example: 08:00
+        out_booking:
+          type: LocalTime
+          format: LocalTime
+          description: Hora Fin de la reserva.
+          example: 18:00
+        user:
+          $ref: '#/components/schemas/User'
+        desk:
+          $ref: '#/components/schemas/Desk'
+
+    Booking:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: number
+              format: long
+              description: Id autonúmerico como clave primaria de la BBDD
+              example: 1
+        - $ref: '#/components/schemas/BookingIn'
+#        - $ref: '#/components/schemas/BookingPut'
+
+#    BookingPut:
+#      allOf:
+#        - type: object
+#          properties:
+#            desk:
+#              type: boolean
+#              format: boolean
+#              description: Cambiar que ya no es o sí un escritorio
+#              example: false
+#            meeting_room:
+#              type: boolean
+#              format: boolean
+#              description: Cambiar que ya no es o sí una sala de reuniones
+#              example: true
+#        - $ref: '#/components/schemas/DeskIn'
+
+    SignIn:
+      type: object
+      properties:
+        modality:
+          type: string
+          format: string
+          description: Tipo de trabajo - Office . HomeWork - InClient
+          example: Office
+        day:
+          type: LocalDate
+          format: LocalDate
+          description: Fecha del fichaje.
+          example: 2023-11-22
+        in_time:
+          type: LocalTime
+          format: LocalTime
+          description: Hora de entrada del fichaje a registrar.
+          example: 08:00
+        out_time:
+          type: LocalTime
+          format: LocalTime
+          description: Hora de salida del fichaje a registrar
+          example: 18:00
+        incidence_in:
+          type: string
+          format: string
+          description: Descripcion de una entrada atrasada por diversas causas
+          example: médico
+        incidence_out:
+          type: string
+          format: string
+          description: Descripcion de una salida adelantada por diversas causas
+          example: médico
+        user:
+          $ref: '#/components/schemas/User'
+
+    Sign:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: number
+              format: long
+              description: Id autonúmerico como clave primaria de la BBDD
+              example: 1
+        - $ref: '#/components/schemas/SignIn'
+
+    SignPut:
+      allOf:
+        - type: object
+          properties:
+            incidence_in:
+              type: string
+              format: string
+              description: Cambio de incidencia de entrada sobre un registro
+              example: HOLIDAYS
+        - $ref: '#/components/schemas/SignIn'
+
+    SignOutDto:
+      type: object
+      properties:
+        out_time:
+          type: LocalTime
+          format: LocalTime
+          description: Hora de salida del fichaje a registrar
+          example: 18:00
+        incidence_out:
+          type: string
+          format: string
+          description: Descripcion de una salida adelantada por diversas causas
+          example: médico
+
+    UserPassDto:
+      type: object
+      properties:
+        pass:
+          type: string
+          format: string
+          description: Cambio de contraseña se encripta una vez recibida
+          example: 1234567
+
     BadRequest:
       type: object
       properties:
@@ -476,6 +968,38 @@ components:
           items:
             $ref: '#/components/schemas/ErrorFieldDesk'
 
+    BadRequestBooking:
+      type: object
+      properties:
+        code:
+          type: string
+          description: código de estado
+          example: 400
+        message:
+          type: string
+          description: Mensaje de error
+          example: Error de validación
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorFieldBooking'
+
+    BadRequestSign:
+      type: object
+      properties:
+        code:
+          type: string
+          description: código de estado
+          example: 400
+        message:
+          type: string
+          description: Mensaje de error
+          example: Error de validación
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorFieldSign'
+
     ErrorField:
       type: object
       description: Error de validación en un campo de entrada
@@ -501,6 +1025,32 @@ components:
           type: string
           description: Mensaje de error asociado con el campo
           example: El campo no puede estar el campo en blanco
+
+    ErrorFieldBooking:
+      type: object
+      description: Error de validación en un campo de entrada
+      properties:
+        fieldName:
+          type: LocalDate
+          description: El campo donde se ha producido el error
+          example: day
+        message:
+          type: string
+          description: Mensaje de error asociado con el campo
+          example: El campo no puede ser nulo
+
+    ErrorFieldSign:
+      type: object
+      description: Error de validación en un campo de entrada
+      properties:
+        fieldName:
+          type: LocalDate
+          description: El campo donde se ha producido el error
+          example: day
+        message:
+          type: string
+          description: Mensaje de error asociado con el campo
+          example: El campo no puede ser nulo
 
     NotFound:
       type: object
@@ -548,6 +1098,20 @@ components:
           schema:
             $ref: '#/components/schemas/BadRequestDesk'
 
+    BadRequestBooking:
+      description: Error de validación
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestBooking'
+
+    BadRequestSign:
+      description: Error de validación
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestSign'
+
     NotFound:
       description: Recurso no encontrado
       content:
@@ -572,6 +1136,7 @@ components:
         type: number
         format: long
         example: 13
+
     Username:
       name: username
       in: query #@RequestParam: no forma parte de la URL, se carga por "?" como opción, es un "WHERE".
@@ -601,16 +1166,48 @@ components:
         type: string
         format: string
         example: german
-    Department:
-      name: department
+
+    Day:
+      name: day
+      in: query #@RequestParam: no forma parte de la URL, se carga por "?" como opción, es un "WHERE".
+      description: Filtrar por un dia
+      required: false
+      schema:
+        type: LocalDate
+        format: LocalDate
+        example: 2023-11-22
+
+    seconDay:
+      name: secondDay
+      in: query #@RequestParam: no forma parte de la URL, se carga por "?" como opción, es un "WHERE".
+      description: Para filtrar entre dias junto con el day
+      required: false
+      schema:
+        type: LocalDate
+        format: LocalDate
+        example: 2023-11-27
+
+    UserInSing_Department:
+      name: userInSign_department
       in: path
       description: Filtrar por los usuarios que pertenecen a un determinado departamento
       required: true
       schema:
         type: string
         format: string
-        enum: [ USER, MANAGER, ADMIN ]
-        example: USER
+        enum: [ INFORMATICA, ADMINISTRACION, SECRETARIA ]
+        example: INFORMATICA
+
+    Department:
+      name: department
+      in: query
+      description: Filtrar por los usuarios que pertenecen a un determinado departamento
+      required: false
+      schema:
+        type: string
+        format: string
+        enum: [ INFORMATICA, ADMINISTRACION, SECRETARIA ]
+        example: INFORMATICA
 
     DeskId:
       name: deskId
@@ -622,158 +1219,25 @@ components:
         format: long
         example: 1
 
-    PlayerId:
-      name: playerId
+    BookingId:
+      name: bookingId
       in: path
-      description: Identificador de un jugador
-      required: true
-      schema:
-        type: number
-        format: long
-        example: 13
-    UserInPlayer:
-      name: userInPlayer
-      in: query
-      description: Identificador de un jugador, cuando se filtra solo por este parámetro se devuelve listado ordenado por sexo
-      required: false
-      schema:
-        type: number
-        format: long
-        example: 13
-    Active:
-      name: active
-      in: query
-      description: Filtrar por los jugadores en activo del club, cuando se filtra solo por este parámetro se devuelve listado ordenado por sexo
-      required: false
-      schema:
-        type: boolean
-        format: boolean
-        enum: [ true, false ]
-        example: true
-    ActiveTeam:
-      name: active
-      in: query
-      description: Filtrar por los equipo en activo del club
-      required: false
-      schema:
-        type: boolean
-        format: boolean
-        enum: [ true, false ]
-        example: true
-    TeamId:
-      name: teamId
-      in: path
-      description: Identificador de un equipo
-      required: true
-      schema:
-        type: number
-        format: long
-        example: 2
-    Category:
-      name: category
-      in: query
-      description: Filtrar por la categoria a la que pertenece un equipo
-      required: false
-      schema:
-        type: string
-        format: string
-        example: Benjamín
-    Competition:
-      name: competition
-      in: query
-      description: Filtrar por la competición a la que pertenece un equipo
-      required: false
-      schema:
-        type: string
-        format: string
-        example: Moratalaz
-    UserInTeam:
-      name: userInTeam
-      in: path
-      description: Identificador de un usuario que es entrenador
-      required: true
-      schema:
-        type: number
-        format: long
-        example: 13
-    TeamInMatch:
-      name: teamInMatch
-      in: path
-      description: Identificador de un equipo que juega un partido
-      required: true
-      schema:
-        type: number
-        format: long
-        example: 2
-    MatchId:
-      name: matchId
-      in: path
-      description: Identificador de un partido
-      required: true
-      schema:
-        type: number
-        format: long
-        example: 2
-    TeamInMatchQuery:
-      name: teamInMatch
-      in: query
-      description: Identificador de un equipo que juega un partido
-      required: false
-      schema:
-        type: number
-        format: long
-        example: 2
-    DateMatch:
-      name: dateMatch
-      in: query
-      description: Fecha de un partido
-      required: false
-      schema:
-        type: dateLocal
-        format: dateLocal
-        example: 2023-01-05
-    HourMatch:
-      name: hourMatch
-      in: query
-      description: Hora de un partido
-      required: false
-      schema:
-        type: timeLocal
-        format: timeLocal
-        example: 22:00:00
-    ClothesId:
-      name: clothesId
-      in: path
-      description: Identificador de un pedido
+      description: Identificador de una reserva
       required: true
       schema:
         type: number
         format: long
         example: 1
-    PlayerInClothesQuery:
-      name: playerInClothes
-      in: query
-      description: Identificador de un jugador del sistema
-      required: false
+
+    SignId:
+      name: signId
+      in: path
+      description: Identificador de un fichaje
+      required: true
       schema:
         type: number
         format: long
-        example: 13
-    SizeEquipment:
-      name: sizeEquipment
-      in: query
-      description: Talla de la equipación
-      required: false
-      schema:
-        type: string
-        format: string
-        example: XL
-    Dorsal:
-      name: dorsal
-      in: query
-      description: Dorsal de un jugador del sistema
-      required: false
-      schema:
-        type: number
-        format: int
-        example: 8
+        example: 1
+
+
+
