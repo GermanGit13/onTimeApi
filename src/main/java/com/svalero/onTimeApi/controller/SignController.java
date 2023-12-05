@@ -59,7 +59,7 @@ public class SignController {
         /**
          * Para poder fichar dias anteriores o crear un fichaje en el dia
          */
-        if (sign.getDay().equals("")){
+        if (sign.getDay() == null){
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
             sign.setDay(LocalDate.now());
