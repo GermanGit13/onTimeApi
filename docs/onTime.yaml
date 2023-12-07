@@ -813,18 +813,18 @@ components:
       type: object
       properties:
         day:
-          type: LocalDate
-          format: LocalDate
+          type: string
+          format: date-time
           description: Fecha para la reserva del escritorio por parte del usuario.
           example: 2023-11-22
         in_booking:
-          type: LocalTime
-          format: LocalTime
+          type: string
+          format: date-time
           description: Hora de inicio de la reserva.
           example: 08:00
         out_booking:
-          type: LocalTime
-          format: LocalTime
+          type: string
+          format: date-time
           description: Hora Fin de la reserva.
           example: 18:00
         user:
@@ -869,18 +869,18 @@ components:
           description: Tipo de trabajo - Office . HomeWork - InClient
           example: Office
         day:
-          type: LocalDate
-          format: LocalDate
+          type: string
+          format: date-time
           description: Fecha del fichaje.
           example: 2023-11-22
         in_time:
-          type: LocalTime
-          format: LocalTime
+          type: string
+          format: date-time
           description: Hora de entrada del fichaje a registrar.
           example: 08:00
         out_time:
-          type: LocalTime
-          format: LocalTime
+          type: string
+          format: date-time
           description: Hora de salida del fichaje a registrar
           example: 18:00
         incidence_in:
@@ -922,8 +922,8 @@ components:
       type: object
       properties:
         out_time:
-          type: LocalTime
-          format: LocalTime
+          type: string
+          format: date-time
           description: Hora de salida del fichaje a registrar
           example: 18:00
         incidence_out:
@@ -1023,7 +1023,7 @@ components:
       description: Error de validación en un campo de entrada
       properties:
         fieldName:
-          type: int
+          type: number
           description: El campo donde se ha producido el error
           example: floor
         message:
@@ -1036,7 +1036,7 @@ components:
       description: Error de validación en un campo de entrada
       properties:
         fieldName:
-          type: LocalDate
+          type: string
           description: El campo donde se ha producido el error
           example: day
         message:
@@ -1049,7 +1049,7 @@ components:
       description: Error de validación en un campo de entrada
       properties:
         fieldName:
-          type: LocalDate
+          type: string
           description: El campo donde se ha producido el error
           example: day
         message:
@@ -1178,8 +1178,8 @@ components:
       description: Filtrar por un dia
       required: false
       schema:
-        type: LocalDate
-        format: LocalDate
+        type: string
+        format: date-time
         example: 2023-11-22
 
     seconDay:
@@ -1188,8 +1188,8 @@ components:
       description: Para filtrar entre dias junto con el day
       required: false
       schema:
-        type: LocalDate
-        format: LocalDate
+        type: string
+        format: date-time
         example: 2023-11-27
 
     UserInSing_Department:
