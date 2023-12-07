@@ -22,24 +22,24 @@ public interface SignService {
     SignOutDto signOut(long id, SignOutDto signOutDto) throws SignNotFoundException;
     void deleteSign (long id) throws SignNotFoundException;
     Sign modifySign(long idSign, long idUser, Sign newSign) throws SignNotFoundException, UserNotFoundException, RollbackException;
-    List<Sign> findAll();
+    List<Sign> findAllByOrderByDayDesc();
     List<Sign> findByDay(LocalDate day);
-    List<Sign> findByDayBetween(LocalDate firstDay, LocalDate secondDay);
-    List<Sign> findByUserInSign_Name(String name);
-    List<Sign> findByUserInSign_NameContains(String name);
-    List<Sign> findByDayAndUserInSign_NameContains(LocalDate day, String name);
-    List<Sign> findByDayBetweenAndUserInSign_NameContains(LocalDate firstDay, LocalDate secondDay, String name);
+    List<Sign> findByDayBetweenOrderByDayDesc(LocalDate firstDay, LocalDate secondDay);
+    List<Sign> findByUserInSign_NameOrderByDayDesc(String name);
+    List<Sign> findByUserInSign_NameContainsOrderByDayDesc(String name);
+    List<Sign> findByDayAndUserInSign_NameContainsOrderByDayDesc(LocalDate day, String name);
+    List<Sign> findByDayBetweenAndUserInSign_NameContainsOrderByDayDesc(LocalDate firstDay, LocalDate secondDay, String name);
 
-    List<Sign> findByDepartment(String userInSign_department);
-    List<Sign> findAllByUserInSign_DepartmentAndDay(String userInSign_department, LocalDate day);
-    List<Sign> findByUserInSign_DepartmentAndDayAndUserInSign_NameContains(String userInSign_department, LocalDate day, String name);
-    List<Sign> findByUserInSign_DepartmentAndUserInSign_NameContains(String userInSign_department, String name);
-    List<Sign> findByUserInSign_DepartmentAndDayBetween(String userInSign_department, LocalDate firstDay, LocalDate secondDay);
+    List<Sign> findByDepartmentOrderByDayDesc(String userInSign_department);
+    List<Sign> findAllByUserInSign_DepartmentAndDayOrderByDayDesc(String userInSign_department, LocalDate day);
+    List<Sign> findByUserInSign_DepartmentAndDayAndUserInSign_NameContainsOrderByDayDesc(String userInSign_department, LocalDate day, String name);
+    List<Sign> findByUserInSign_DepartmentAndUserInSign_NameContainsOrderByDayDesc(String userInSign_department, String name);
+    List<Sign> findByUserInSign_DepartmentAndDayBetweenOrderByDayDesc(String userInSign_department, LocalDate firstDay, LocalDate secondDay);
 
     Sign findById(long id) throws SignNotFoundException;
-    List<Sign> findByUserInSign(User user);
-    List<Sign> findByUserInSignAndDay(User user, LocalDate day);
-    List<Sign> findByUserInSignAndDayBetween(User user, LocalDate firstDay, LocalDate seconDay);
-    List<Sign> findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContains(String userInSign_department, LocalDate firstDay, LocalDate secondDay, String name);
+    List<Sign> findByUserInSignOrderByDayDesc(User user);
+    List<Sign> findByUserInSignAndDayOrderByDayDesc(User user, LocalDate day);
+    List<Sign> findByUserInSignAndDayBetweenOrderByDayDesc(User user, LocalDate firstDay, LocalDate seconDay);
+    List<Sign> findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContainsOrderByDayDesc(String userInSign_department, LocalDate firstDay, LocalDate secondDay, String name);
 //    List<Sign> findByDayTrueAndIn_timeIsTrueAndUserInSign(LocalDate date, LocalTime inTime, User user);
 }

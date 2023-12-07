@@ -38,7 +38,7 @@ public class Sign {
     private String incidence_in;
 
     @Column(name = INCIDENCEOUT)
-    private String incidende_out;
+    private String incidence_out;
 
     /**
      * Siempre en las N:1 (ManyToOne se define la clave ajena en el lado N (Many)

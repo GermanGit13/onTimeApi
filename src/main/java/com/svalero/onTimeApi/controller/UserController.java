@@ -150,7 +150,7 @@ public class UserController {
     }
 
     /**
-     *
+     * Login mediante usuario y contraseña
      */
     @GetMapping("/users/login")
     public ResponseEntity<Object> getLogin(@RequestParam (name = "username", defaultValue = "" )  String username,

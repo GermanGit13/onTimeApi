@@ -55,16 +55,29 @@ public class SignController {
     @PostMapping("/users/{userId}/signs")
     @Validated
     public ResponseEntity<Sign> addSign(@Valid @PathVariable long userId, @RequestBody Sign sign) throws UserNotFoundException {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
-        sign.setDay(LocalDate.now());
-        System.out.println("Usuario registra fichaje: " + userId );
-        System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
-        System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidende_out());
 
-        logger.debug(LITERAL_BEGIN_ADD + SIGN);
-        Sign newSign = signService.addSign(sign, userId);
-        return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+        /**
+         * Para poder fichar dias anteriores o crear un fichaje en el dia
+         */
+        if (sign.getDay() == null){
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
+            sign.setDay(LocalDate.now());
+            System.out.println("Usuario registra fichaje: " + userId );
+            System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
+            System.out.println("Datos que recibo OUT: " + sign.getDay() + " / " + sign.getOut_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_out());
+
+            logger.debug(LITERAL_BEGIN_ADD + SIGN);
+            Sign newSign = signService.addSign(sign, userId);
+            return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+        } else {
+            System.out.println("Usuario registra fichaje: " + userId );
+            System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getOut_time());
+
+            logger.debug(LITERAL_BEGIN_ADD + SIGN);
+            Sign newSign = signService.addSign(sign, userId);
+            return new ResponseEntity<>(newSign, HttpStatus.CREATED);
+        }
     }
 
     @PatchMapping("/signs/{id}")
@@ -138,7 +151,7 @@ public class SignController {
             LocalDate secondDate = LocalDate.parse(secondDay);
             System.out.println("List Signs Between: " + firstDate + " / " + secondDate);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDayBetween(firstDate, secondDate);
+            List<Sign> signs = signService.findByDayBetweenOrderByDayDesc(firstDate, secondDate);
             return ResponseEntity.ok(signs);
         }
 
@@ -149,7 +162,7 @@ public class SignController {
             System.out.println("List Signs by name: " + name);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
 //            List<Sign> signs = signService.findByUserInSign_Name(name);
-            List<Sign> signs = signService.findByUserInSign_NameContains(name);
+            List<Sign> signs = signService.findByUserInSign_NameContainsOrderByDayDesc(name);
             return ResponseEntity.ok(signs);
         }
 
@@ -160,7 +173,7 @@ public class SignController {
             LocalDate firstDate = LocalDate.parse(day);
             System.out.println("List Signs by Day: " + day + " / " + name);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDayAndUserInSign_NameContains(firstDate, name);
+            List<Sign> signs = signService.findByDayAndUserInSign_NameContainsOrderByDayDesc(firstDate, name);
             return ResponseEntity.ok(signs);
         }
 
@@ -172,7 +185,7 @@ public class SignController {
             LocalDate secondDate = LocalDate.parse(secondDay);
             System.out.println("List Signs Between and Name: " + firstDate + " / " + secondDate + " / " + name);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDayBetweenAndUserInSign_NameContains(firstDate, secondDate, name);
+            List<Sign> signs = signService.findByDayBetweenAndUserInSign_NameContainsOrderByDayDesc(firstDate, secondDate, name);
             return ResponseEntity.ok(signs);
         }
 
@@ -182,7 +195,7 @@ public class SignController {
         if (!department.equals("") && day.equals("") && secondDay.equals("") && name.equals("") ) {
             System.out.println("List Signs by department: " + department);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByDepartment(department);
+            List<Sign> signs = signService.findByDepartmentOrderByDayDesc(department);
             return  ResponseEntity.ok(signs);
         }
 
@@ -193,7 +206,7 @@ public class SignController {
             System.out.println("List Signs by department and Day: " + department + " / " + day);
             LocalDate firstDate = LocalDate.parse(day);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDay(department, firstDate);
+            List<Sign> signs = signService.findAllByUserInSign_DepartmentAndDayOrderByDayDesc(department, firstDate);
             return ResponseEntity.ok(signs);
         }
 
@@ -204,7 +217,7 @@ public class SignController {
             System.out.println("List Signs by department and Day: " + department + " / " + day + " / " + name);
             LocalDate firstDate = LocalDate.parse(day);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayAndUserInSign_NameContains(department, firstDate, name);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayAndUserInSign_NameContainsOrderByDayDesc(department, firstDate, name);
             return ResponseEntity.ok(signs);
         }
 
@@ -214,7 +227,7 @@ public class SignController {
         if (!department.equals("")  && day.equals("") && secondDay.equals("") && !name.equals("")) {
             System.out.println("List Signs by department and Day: " + department + " / " + name);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByUserInSign_DepartmentAndUserInSign_NameContains(department, name);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndUserInSign_NameContainsOrderByDayDesc(department, name);
             return ResponseEntity.ok(signs);
         }
 
@@ -226,7 +239,7 @@ public class SignController {
             LocalDate secondDate = LocalDate.parse(secondDay);
             System.out.println("List Signs by department between: " + firstDate + " / " + secondDate);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayBetween(department, firstDate, secondDate);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayBetweenOrderByDayDesc(department, firstDate, secondDate);
             return ResponseEntity.ok(signs);
         }
 
@@ -238,12 +251,12 @@ public class SignController {
             LocalDate secondDate = LocalDate.parse(secondDay);
             System.out.println("List Signs by department between: " + firstDate + " / " + secondDate);
             logger.debug(LITERAL_BEGIN_LISTALL + SIGN);
-            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContains(department, firstDate, secondDate, name);
+            List<Sign> signs = signService.findByUserInSign_DepartmentAndDayBetweenAndUserInSign_NameContainsOrderByDayDesc(department, firstDate, secondDate, name);
             return ResponseEntity.ok(signs);
         }
 
         logger.debug(LITERAL_END_LISTALL + SIGN);
-        List<Sign> signs = signService.findAll();
+        List<Sign> signs = signService.findAllByOrderByDayDesc();
         return ResponseEntity.ok(signs);
     }
 
@@ -275,7 +288,7 @@ public class SignController {
             long userIdNew = Long.parseLong(userId);
             User user = userService.findById(userIdNew);
             System.out.println("List Signs by User: " + user.getUsername());
-            List<Sign> signs = signService.findByUserInSign(user);
+            List<Sign> signs = signService.findByUserInSignOrderByDayDesc(user);
             logger.debug(LITERAL_END_LISTALL + SIGN);
 
             return ResponseEntity.ok(signs);
@@ -290,7 +303,7 @@ public class SignController {
             User user = userService.findById(userIdNew);
             LocalDate firstDay = LocalDate.parse(day);
             System.out.println("List Signs by User and Day: " + user.getUsername() + " / " + day);
-            List<Sign> signs = signService.findByUserInSignAndDay(user, firstDay);
+            List<Sign> signs = signService.findByUserInSignAndDayOrderByDayDesc(user, firstDay);
 
             return  ResponseEntity.ok(signs);
         }
@@ -305,7 +318,7 @@ public class SignController {
             LocalDate firstDay = LocalDate.parse(day);
             LocalDate secondDay = LocalDate.parse(seconDay);
             System.out.println("List Signs by User between date: " + user.getUsername() + " / " + firstDay + " / " + seconDay);
-            List<Sign> signs = signService.findByUserInSignAndDayBetween(user, firstDay, secondDay);
+            List<Sign> signs = signService.findByUserInSignAndDayBetweenOrderByDayDesc(user, firstDay, secondDay);
 
             return  ResponseEntity.ok(signs);
         }
