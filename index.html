@@ -1,30 +1,20 @@
-<html>
-  <head>
-    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
-    <link rel=" stylesheet" type="text/css" href="https://unpkg.com/swagger-ui.css"/>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Elements in HTML</title>
+    <!-- Embed elements Elements via Web Component -->
+    <script src="https://unpkg.com/@stoplight/elements/web-components.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@stoplight/elements/styles.min.css">
+</head>
+<body>
 
-  <title>OnTimeAPi</title>  
-  </head>
-  <body>
-    <div id="swagger-ui"></div>
-    <script>
-      window.onload = function() {
-          // Build a system
-          const ui = SwaggerUIBundle({
-              url: "https://github.com/GermanGit13/onTimeApi/blob/master/docs/onTime.yaml",
-              dom_id: '#swagger-ui',
-              deepLinking: true,
-              presets: [
-                  SwaggerUIBundle.presets.apis,
-                  SwaggerUIBundle.SwaggerUIStandalonePreset
-              ],
-              plugins: [
-                  SwaggerUIBundle.plugins.DownloadUrl
-              ],
-              layout: "StandaloneLayout",
-          })
-          window.ui = ui
-      }
-    </script>
-  </body>
+<elements-api
+        apiDescriptionUrl="https://github.com/GermanGit13/onTimeApi/blob/master/docs/onTime.yaml"
+        router="hash"
+        layout="sidebar"
+/>
+
+</body>
 </html>
