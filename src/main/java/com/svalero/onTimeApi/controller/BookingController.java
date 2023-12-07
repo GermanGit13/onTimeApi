@@ -85,7 +85,7 @@ public class BookingController {
      * @RequestParam: Son las QueryParam se usa para poder hacer filtrados en las busquedas "Where"
      */
     @GetMapping("/bookings")
-    public ResponseEntity<Object> getBooking() {
+    public ResponseEntity<Object> getBookings() {
         logger.debug(LITERAL_END_LISTALL + BOOKING);
         List<Booking> bookings = bookingService.findAll();
         logger.debug(LITERAL_END_LISTALL + BOOKING);
@@ -100,7 +100,7 @@ public class BookingController {
      * throws MatchNotFoundException: capturamos la exception y se la mandamos al manejador de excepciones creado más abajo @ExceptionHandler
      */
     @GetMapping("/bookings/{id}")
-    public ResponseEntity<Booking> findById(@PathVariable long id) throws BookingNotFoundException {
+    public ResponseEntity<Booking> getBooking(@PathVariable long id) throws BookingNotFoundException {
         logger.debug(LITERAL_BEGIN_GETID + BOOKING);
         Booking booking = bookingService.finfById(id);
         logger.debug((LITERAL_END_GETID + BOOKING));

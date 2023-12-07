@@ -370,7 +370,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
         - Booking
       summary: Listado de Reservas
       description: Obtiene la información de todas las reservas de escritorios del sistema
-      operationId: getBooking
+      operationId: getBookings
       #      parameters:
       #        - $ref: '#/components/parameters/Name'
       #        - $ref: '#/components/parameters/Rol'
@@ -415,7 +415,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
         - Booking
       summary: Consulta de una reserva por Id
       description: Consulta de una reserva por su identificador único
-      operationId: findById
+      operationId: getBooking
       responses:
         '200':
           description: Se devuelve la información de una reserva
@@ -428,7 +428,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  '/bookings/{idBooking}/users/{idUser}/desks/{idDesk}':
+  '/bookings/{id}/users/{id}/desks/{id}':
     parameters:
       - $ref: '#/components/parameters/BookingId'
       - $ref: '#/components/parameters/UserId'
@@ -461,7 +461,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  '/users/{userId}/signs':
+  '/users/{id}/signs':
     parameters:
       - $ref: '#/components/parameters/UserId'
 
@@ -571,7 +571,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  '/signs/{idSign}/users/{idUser}':
+  '/signs/{id}/users/{id}':
     parameters:
      - $ref: '#/components/parameters/SignId'
      - $ref: '#/components/parameters/UserId'
@@ -1133,7 +1133,7 @@ components:
 
   parameters:
     UserId:
-      name: userId
+      name: id
       in: path
       description: Identificador del Usuario
       required: true
@@ -1205,9 +1205,9 @@ components:
 
     Department:
       name: department
-      in: query
+      in: path
       description: Filtrar por los usuarios que pertenecen a un determinado departamento
-      required: false
+      required: true
       schema:
         type: string
         format: string
@@ -1215,7 +1215,7 @@ components:
         example: INFORMATICA
 
     DeskId:
-      name: deskId
+      name: id
       in: path
       description: Identificador del Escritorio
       required: true
@@ -1225,7 +1225,7 @@ components:
         example: 1
 
     BookingId:
-      name: bookingId
+      name: id
       in: path
       description: Identificador de una reserva
       required: true
@@ -1235,7 +1235,7 @@ components:
         example: 1
 
     SignId:
-      name: signId
+      name: id
       in: path
       description: Identificador de un fichaje
       required: true
