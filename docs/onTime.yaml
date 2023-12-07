@@ -144,7 +144,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
       operationId: getUser
       responses:
         '200':
-          description: Se devuelve la información de un usuario
+          description: Se devuelve la información de un usuario.
           content:
             application/json:
               schema:
@@ -184,7 +184,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
       tags:
         - User
       summary: Búsqueda por Department
-      description: Operación de buscar todos los  usuarios de un departamento departamento
+      description: Operación de buscar todos los  usuarios de un departamento ordenado  de forma descendente por fecha.
       operationId: getUserByDepartment
       responses:
         '200':
@@ -492,7 +492,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
       tags:
         - Sign
       summary: Listado de fichajes de un usuario
-      description: Permite buscar los fichajes de un usuario en un día o entre fechas
+      description: Permite buscar los fichajes de un usuario en un día o entre fechas ordenado  de forma descendente por fecha.
       operationId: findByUserInSign
       parameters:
         - $ref: '#/components/parameters/Day'
@@ -534,7 +534,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
       tags:
         - Sign
       summary: Consulta de un fichaje por Id
-      description: Consulta de un fichaje por su identificador único
+      description: Consulta de un fichaje por su identificador único ordenado  de forma descendente por fecha.
       operationId: findById
       parameters:
         - $ref: '#/components/parameters/SignId'
@@ -614,7 +614,7 @@ paths: # Rutas operaciones que tenemos por cada path Ej: /users
       tags:
         - Sign
       summary: Listado de fichajes de todos los usuarios con filtros
-      description: Permite buscar los fichajes de un usuario en un día o entre fechas o departamento. Con la combianción de todas
+      description: Permite buscar los fichajes de un usuario en un día o entre fechas o departamento ordenado  de forma descendente por fecha. Permite la combianción de todas ellas.
       operationId: getSigns
       responses:
         '200':
@@ -680,6 +680,11 @@ components:
           format: string
           description: Número de teléfono que se da de alta para usar la aplicación,, se realiza validaciones de longuitud mínima de carácteres 9
           example: 666 66 66 66
+        photo:
+          type: string
+          format: string
+          description: String con la url donde se almacenan las fotografías
+          example: https://i.ibb.co/2yX1Scv/79ff5a08-94e9-47f5-a742-e4b1e9e59dfa.jpg
 
     User:
       allOf:
