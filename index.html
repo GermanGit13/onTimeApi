@@ -1,7 +1,7 @@
 <html>
 <head>
     <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
-    <link rel=" stylesheet" type="text/css" href="https://unpkg.com/swagger-ui.css"/>
+    <link rel=" stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@03/swagger-ui.css"/>
 
     <title>OnTimeAPi</title>
 </head>
@@ -16,12 +16,11 @@
             deepLinking: true,
             presets: [
                 SwaggerUIBundle.presets.apis,
-                SwaggerUIStandalonePreset
+                SwaggerUIBundle.SwaggerUIStandalonePreset
             ],
             plugins: [
                 SwaggerUIBundle.plugins.DownloadUrl
             ],
-            layout: "StandaloneLayout",
         })
         window.ui = ui
     }
