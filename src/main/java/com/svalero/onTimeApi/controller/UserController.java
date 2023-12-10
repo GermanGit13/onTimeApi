@@ -50,11 +50,21 @@ public class UserController {
      */
     @PostMapping("/users")
     @Validated
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws UserNotFoundException {
         logger.debug(LITERAL_BEGIN_ADD + USER);
+//        String searchUsername;
+//        searchUsername = user.getUsername();
+//        if (!user.getUsername().equals("")) {
+//            User searchUser = userService.findUserByUsername(searchUsername);
+//            if (searchUser != null) {
+//                return ResponseEntity.noContent().build();
+//            }
+//        }
+
         User newUser = userService.addUser(user);
         logger.debug(LITERAL_END_ADD + USER);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
