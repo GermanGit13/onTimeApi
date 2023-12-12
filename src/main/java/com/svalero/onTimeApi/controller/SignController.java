@@ -20,8 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +60,16 @@ public class SignController {
          */
         if (sign.getDay() == null){
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
+            LocalTime localTime = LocalTime.parse(LocalTime.now().format(dateTimeFormatter));
+            localTime = localTime.plusHours(1);
+            sign.setIn_time(localTime);
+//            ZoneId fromTimeZone = ZoneId.of("Europe/Madrid"); // Zona Horaria
+//            LocalDateTime today = LocalDateTime.now(); // fecha actual
+//            ZonedDateTime currentTime = today.atZone(fromTimeZone);
+//            currentTime = ZonedDateTime.parse(currentTime.format(dateTimeFormatter));
+//            LocalTime localTime = LocalTime.from(currentTime);
+//            sign.setIn_time(localTime);
+//            sign.setIn_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
             sign.setDay(LocalDate.now());
             System.out.println("Usuario registra fichaje: " + userId );
             System.out.println("Datos que recibo IN: " + sign.getDay() + " / " + sign.getIn_time()  + " / " + sign.getModality()  + " / " + sign.getIncidence_in());
@@ -85,7 +93,10 @@ public class SignController {
         logger.debug(LITERAL_BEGIN_SIGNOUT + SIGN);
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        signOutDto.setOut_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
+        LocalTime localTime = LocalTime.parse(LocalTime.now().format(dateTimeFormatter));
+        localTime = localTime.plusHours(1);
+        signOutDto.setOut_time(localTime);
+//        signOutDto.setOut_time(LocalTime.parse(LocalTime.now().format(dateTimeFormatter)));
 
         signService.signOut(id, signOutDto);
         return new ResponseEntity<>(signOutDto, HttpStatus.CREATED);
