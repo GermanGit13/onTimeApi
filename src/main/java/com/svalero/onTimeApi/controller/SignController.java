@@ -61,6 +61,7 @@ public class SignController {
         if (sign.getDay() == null){
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime localTime = LocalTime.parse(LocalTime.now().format(dateTimeFormatter));
+            // TODO QUITAR CUANDO ESTE EN LOCAL -> en CLOUD LA HORA SALE CON DISTINTA ZONA HORARIA
             localTime = localTime.plusHours(1);
             sign.setIn_time(localTime);
 //            ZoneId fromTimeZone = ZoneId.of("Europe/Madrid"); // Zona Horaria
